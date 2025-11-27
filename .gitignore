@@ -1,0 +1,59 @@
+# Node modules
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment variables
+.env
+.env.*        # .env.development, .env.production, etc.
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build output
+dist/
+build/
+out/
+coverage/
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Debug
+*.tgz
+
+# Editor folders
+.vscode/
+.idea/
+
+# Optional caches
+.npm/
+.eslintcache
+.cache/
+.parcel-cache
+
+# TypeScript (if used)
+*.tsbuildinfo
+
+# Svelte / Next / Nuxt / Remix frameworks caches (optional)
+.next/
+.nuxt/
+.svelte-kit/
+.server/
+
+# PM2 logs and dump files
+.pids/
+.pm2/
+
+# Misc
+*.swp
