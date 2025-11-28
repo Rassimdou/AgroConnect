@@ -22,7 +22,13 @@ function App() {
   }
 
   if (currentPage === 'user-selection') {
-    return <UserTypeSelection onBack={handleBackToHome} />
+    return (
+      <>
+        <Header />
+        <UserTypeSelection onBack={handleBackToHome} />
+        <Footer />
+      </>
+    )
   }
 
   return (
