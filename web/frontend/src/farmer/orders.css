@@ -1,0 +1,475 @@
+/* Orders.css */
+.orders-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 50%, #ecfdf5 100%);
+  padding-top: 5rem;
+}
+
+.orders-header {
+  background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+  color: white;
+}
+
+.orders-title {
+  font-size: 1.875rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.orders-subtitle {
+  color: #d1fae5;
+}
+
+.orders-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.orders-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+  .orders-stats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.stat-card {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.stat-card-pending {
+  border-left: 4px solid #f59e0b;
+}
+
+.stat-card-confirmed {
+  border-left: 4px solid #3b82f6;
+}
+
+.stat-card-shipped {
+  border-left: 4px solid #8b5cf6;
+}
+
+.stat-card-delivered {
+  border-left: 4px solid #10b981;
+}
+
+.stat-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 0.25rem;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+.orders-filters {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.filters-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.filters-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #1f2937;
+}
+
+.clear-filters {
+  color: #ef4444;
+  background: none;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .filters-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.filter-select,
+.filter-input {
+  padding: 0.75rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.filter-select:focus,
+.filter-input:focus {
+  outline: none;
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.orders-content {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.orders-tabs {
+  display: flex;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+  overflow-x: auto;
+}
+
+.tab-button {
+  padding: 1rem 1.5rem;
+  background: none;
+  border: none;
+  font-weight: 600;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+}
+
+.tab-button:hover {
+  color: #374151;
+  background: #f3f4f6;
+}
+
+.tab-button.active {
+  color: #059669;
+  border-bottom-color: #059669;
+  background: white;
+}
+
+.tab-badge {
+  background: #e5e7eb;
+  color: #374151;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.75rem;
+  font-size: 0.75rem;
+  margin-left: 0.5rem;
+}
+
+.tab-button.active .tab-badge {
+  background: #dcfce7;
+  color: #059669;
+}
+
+.orders-list {
+  padding: 1.5rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #6b7280;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.empty-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.empty-description {
+  margin-bottom: 1.5rem;
+}
+
+.order-item {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.order-item:hover {
+  border-color: #10b981;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.order-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.order-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.order-buyer-avatar {
+  width: 3rem;
+  height: 3rem;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 1.125rem;
+}
+
+.order-details h3 {
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.25rem;
+}
+
+.order-meta {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.order-amount {
+  text-align: right;
+}
+
+.order-total {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #059669;
+  margin-bottom: 0.25rem;
+}
+
+.order-date {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.order-item-body {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #f3f4f6;
+}
+
+@media (min-width: 768px) {
+  .order-item-body {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.order-product {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.product-emoji {
+  font-size: 1.5rem;
+}
+
+.product-info h4 {
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.125rem;
+}
+
+.product-meta {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.order-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.action-button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.action-button-primary {
+  background: #10b981;
+  color: white;
+  border-color: #10b981;
+}
+
+.action-button-primary:hover {
+  background: #059669;
+  transform: translateY(-1px);
+}
+
+.action-button-secondary {
+  background: white;
+  color: #374151;
+}
+
+.action-button-secondary:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.action-button-danger {
+  background: white;
+  color: #ef4444;
+  border-color: #ef4444;
+}
+
+.action-button-danger:hover {
+  background: #fef2f2;
+}
+
+.status-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.status-pending {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #f59e0b;
+}
+
+.status-confirmed {
+  background: #dbeafe;
+  color: #1e40af;
+  border: 1px solid #3b82f6;
+}
+
+.status-shipped {
+  background: #f3e8ff;
+  color: #7c3aed;
+  border: 1px solid #8b5cf6;
+}
+
+.status-delivered {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #22c55e;
+}
+
+.status-cancelled {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #ef4444;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 3rem 1rem;
+}
+
+.loading-spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid #e5e7eb;
+  border-top: 2px solid #10b981;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.animate-entrance {
+  transform: translateY(2.5rem);
+  opacity: 0;
+  transition: all 1s ease;
+}
+
+.animate-entrance.visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.delay-100 {
+  transition-delay: 100ms;
+}
+
+.delay-200 {
+  transition-delay: 200ms;
+}
+
+.delay-300 {
+  transition-delay: 300ms;
+}
