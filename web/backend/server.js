@@ -18,6 +18,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 import authRoutes from './controllers/auth/auth.js';
+import adminRoutes from './controllers/admin/admin.js';
 import aiRoutes from './AI-verification/airoutes.js';
 import reviewRoutes from './review/reviewRoutes.js';
 
@@ -43,6 +44,7 @@ const io = new Server(httpServer, {
 initializeChat(io);
 
 app.use('/api/auth', authRoutes);
+app.use('/api/admin', adminRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/review', reviewRoutes)
 const PORT = process.env.PORT || 3000;

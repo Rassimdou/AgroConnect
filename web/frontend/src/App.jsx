@@ -1,7 +1,5 @@
 import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import Header from './components/header'
 import Hero from './components/hero'
@@ -18,7 +16,6 @@ import ProductDetail from './components/buyer/ProductDetail'
 import Cart from './components/buyer/Cart'
 import MyOrders from './components/buyer/MyOrders'
 import Profile from './components/buyer/Profile'
-import { ROUTES, USER_TYPE_ROUTES } from './routes'
 import FarmerSignin from './components/farmer/FarmerSignin'
 import FarmerSignup from './components/farmer/FarmerSignup'
 import FarmerDashboard from './components/farmer/Dashboard'
@@ -31,10 +28,17 @@ import TransporterSignup from './components/transporter/TransporterSignup'
 import TransporterAvailableJobs from './components/transporter/AvailableJobs'
 import TransporterMyDeliveries from './components/transporter/MyDeliveries'
 import TransporterProfile from './components/transporter/Profile'
+import AdminLogin from './components/admin/AdminLogin'
+import AdminLayout from './components/admin/AdminLayout'
+import AdminDashboard from './components/admin/AdminDashboard'
+import AdminUsers from './components/admin/AdminUsers'
+import AdminProducts from './components/admin/AdminProducts'
+import AdminOrders from './components/admin/AdminOrders'
+import AdminReports from './components/admin/AdminReports'
+import AdminAnalytics from './components/admin/AdminAnalytics'
+import AdminSettings from './components/admin/AdminSettings'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <Router>
       <Routes>
@@ -122,6 +126,19 @@ function App() {
         <Route path="/transporter-available-jobs" element={<TransporterAvailableJobs />} />
         <Route path="/transporter-my-deliveries" element={<TransporterMyDeliveries />} />
         <Route path="/transporter-profile" element={<TransporterProfile />} />
+
+        {/* Admin Routes */}
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Navigate to="/admin/dashboard" replace />} />
+          <Route path="dashboard" element={<AdminDashboard />} />
+          <Route path="users" element={<AdminUsers />} />
+          <Route path="products" element={<AdminProducts />} />
+          <Route path="orders" element={<AdminOrders />} />
+          <Route path="reports" element={<AdminReports />} />
+          <Route path="analytics" element={<AdminAnalytics />} />
+          <Route path="settings" element={<AdminSettings />} />
+        </Route>
 
         {/* Redirect unknown routes to home */}
         <Route path="*" element={<Navigate to="/" replace />} />
