@@ -32,8 +32,11 @@ export const registernewUser = async (req, res) => {
             "SELECT * FROM users WHERE email = ? OR username = ?",
             [email, username]
         );
+        console.log("Existing users:", existingUsers);
+
 
         if (existingUsers.length > 0) {
+            console.log('user already exists')
             return res.status(409).json({ error: "User already exists with this email or username." });
         }
 
@@ -45,6 +48,7 @@ export const registernewUser = async (req, res) => {
 
 
         await connection.end();
+        console.log("Connection to the database closed.");
 
         await sendOTPverificationEmail({ _id: result.insertId, email: user.email }, res);
 
