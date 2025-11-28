@@ -137,8 +137,8 @@ const check_acount_age = async (producer_id) => {
 
 };
 
-const validate_fraud = async (listingName, category, description, price) => {
-    const API_MODEL = 'gemini-2.5-flash'; // or 'gemini-1.5-flash'
+const validate_fraud = async (listingName, category, description, price, producer_id) => {
+    const API_MODEL = 'gemini-2.5-flash';
     const MAX_RETRIES = 3;
 
     const promptPath = path.join(__dirname, "prompt2.txt");
@@ -165,32 +165,59 @@ const validate_fraud = async (listingName, category, description, price) => {
         `"${price}"`
     );
 
+    // Get producer trust score first
+    let trust = 5; // Default neutral trust
+    try {
+        const [rows] = await connection.promise().query(
+            "SELECT * FROM review_summaries WHERE target_id = ? AND target_type = ?;",
+            [producer_id, "producer"]
+        );
+
+        if (rows.length === 0 || rows[0].average_rating < 1) {
+            trust = 10; // No reviews or very low rating = high risk
+        } else if (rows[0].average_rating < 2.5) {
+            trust = 6;
+        } else if (rows[0].average_rating < 4) {
+            trust = 3;
+        } else if (rows[0].average_rating < 4.5) {
+            trust = 1;
+        } else {
+            trust = 0; // Excellent rating = low risk
+        }
+    } catch (dbError) {
+        console.error('Database error fetching trust score:', dbError);
+        // Continue with default trust value
+    }
+
     let lastError = null;
 
-    // Retry logic
+    // Retry logic for AI fraud detection
     for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
         try {
-            // Get the model
             const model = ai.getGenerativeModel({ model: API_MODEL });
-
-            // Generate content with correct format
             const result = await model.generateContent(prompt);
             const response = await result.response;
             const responseText = response.text().trim();
 
-            // Try to parse the score (should be a number)
             const score = parseFloat(responseText);
 
             if (isNaN(score)) {
                 throw new Error(`Invalid response format: ${responseText}`);
             }
 
-            // Clamp score between 0 and 10
+            // Clamp AI score between 0 and 10
             const fraudRiskScore = Math.max(0, Math.min(10, score));
+
+            // Combine fraud score and trust score
+            // Weight: 60% AI fraud score + 40% producer trust score
+            const combinedScore = (fraudRiskScore * 0.6) + (trust * 0.4);
+            const finalScore = Math.max(0, Math.min(10, Math.round(combinedScore * 10) / 10));
 
             return {
                 success: true,
-                fraudRiskScore: fraudRiskScore,
+                finalFraudScore: finalScore,
+                aiFraudScore: fraudRiskScore,
+                producerTrustScore: trust,
                 rawResponse: responseText
             };
 
@@ -199,19 +226,18 @@ const validate_fraud = async (listingName, category, description, price) => {
             console.error(`Attempt ${attempt} failed:`, error.message);
 
             if (attempt < MAX_RETRIES) {
-                // Wait before retrying (exponential backoff)
                 await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
             }
         }
     }
 
-    // All retries failed
+    // If all retries failed
     return {
         success: false,
-        error: lastError?.message || 'Failed to validate fraud after all retries',
-        fraudRiskScore: null
+        error: lastError?.message || 'Unknown error',
+        finalFraudScore: 5 + (trust * 0.4) // Fallback: neutral AI score + trust
     };
-}
+};
 const check_anomaly = async (producer_id) => {
     try {
         let rating = 0;

@@ -1,0 +1,89 @@
+agroconnect-dz/
+│
+├── public/
+│   ├── index.html
+│   └── assets/
+│       └── images/
+│           └── logo.png
+│
+├── src/
+│   ├── App.jsx
+│   ├── index.js
+│   ├── index.css
+│   │
+│   ├── routes/
+│   │   └── AppRoutes.jsx
+│   │
+│   ├── layouts/
+│   │   ├── MainLayout.jsx          # Header + Content
+│   │   └── DashboardLayout.jsx     # Sidebar + Content
+│   │
+│   ├── pages/
+│   │   │
+│   │   ├── Home.jsx                # Landing page
+│   │   ├── Login.jsx               # Role selection (Farmer/Buyer/Transporter/Service Provider)
+│   │   │
+│   │   ├── farmer/
+│   │   │   ├── Dashboard.jsx       # Farmer overview (crop farmers only)
+│   │   │   ├── MyProducts.jsx      # List my crop products
+│   │   │   ├── AddProduct.jsx      # Add crop product
+│   │   │   ├── Orders.jsx          # Orders I received
+│   │   │   └── Profile.jsx         # My profile
+│   │   │
+│   │   ├── buyer/
+│   │   │   ├── Dashboard.jsx       # Buyer overview
+│   │   │   ├── Marketplace.jsx     # Browse ALL (products, storage, fodder, vet)
+│   │   │   ├── ProductDetail.jsx   # View any product/service detail
+│   │   │   ├── Cart.jsx            # Shopping cart
+│   │   │   ├── MyOrders.jsx        # Orders I placed
+│   │   │   └── Profile.jsx         # My profile
+│   │   │
+│   │   ├── transporter/
+│   │   │   ├── Dashboard.jsx       # Transporter overview
+│   │   │   ├── AvailableJobs.jsx   # Browse delivery jobs
+│   │   │   ├── MyDeliveries.jsx    # My active deliveries
+│   │   │   └── Profile.jsx         # My profile & vehicle info
+│   │   │
+│   │   └── provider/               # Service providers (cold storage, fodder, vet)
+│   │       ├── Dashboard.jsx       # Provider overview (shows type-specific stats)
+│   │       ├── MyServices.jsx      # List my services/offerings
+│   │       ├── AddService.jsx      # Add service (with type selector)
+│   │       ├── Requests.jsx        # Service requests I received
+│   │       └── Profile.jsx         # My profile
+│   │
+│   ├── components/
+│   │   │
+│   │   ├── common/
+│   │   │   ├── Header.jsx          # Top nav
+│   │   │   ├── Sidebar.jsx         # Side menu
+│   │   │   ├── Button.jsx          # Reusable button
+│   │   │   ├── Input.jsx           # Form input
+│   │   │   ├── Card.jsx            # Card wrapper
+│   │   │   ├── Modal.jsx           # Popup modal
+│   │   │   └── Spinner.jsx         # Loading
+│   │   │
+│   │   ├── ProductCard.jsx         # Display product/service card
+│   │   ├── ProductForm.jsx         # Form to add product/service
+│   │   ├── OrderCard.jsx           # Display order
+│   │   ├── ImageUpload.jsx         # Upload images
+│   │   ├── FilterBar.jsx           # Filter products
+│   │   └── StatCard.jsx            # Dashboard stat card
+│   │
+│   ├── context/
+│   │   ├── AuthContext.jsx         # User role & auth
+│   │   └── CartContext.jsx         # Shopping cart
+│   │
+│   ├── services/
+│   │   ├── api.js                  # Axios config
+│   │   ├── productService.js       # Products API
+│   │   └── orderService.js         # Orders API
+│   │
+│   ├── utils/
+│   │   ├── constants.js            # Constants
+│   │   └── helpers.js              # Helper functions
+│   │
+│   └── styles/
+│       └── index.css               # All styles (or use Tailwind)
+│
+├── package.json
+└── .env
