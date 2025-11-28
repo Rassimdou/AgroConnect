@@ -379,17 +379,21 @@ const AddProduct = () => {
                   </div>
                 </div>
 
-                <div className="section-divider"></div>
+                <div className="border-t border-gray-200 pt-8 mb-8"></div>
 
                 {/* Product Images */}
-                <div className="form-section">
-                  <h2 className="section-title">
-                    <span>🖼️</span>
+                <div className="mb-8">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                    <span className="text-2xl mr-3">🖼️</span>
                     Product Images
                   </h2>
 
                   <div
-                    className={`upload-area ${isDragOver ? "drag-over" : ""}`}
+                    className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all duration-300 ${
+                      isDragOver
+                        ? "border-green-500 bg-green-50"
+                        : "border-gray-300 bg-gray-50 hover:bg-gray-100"
+                    }`}
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
                     onDrop={handleDrop}
@@ -397,15 +401,15 @@ const AddProduct = () => {
                       document.getElementById("image-upload").click()
                     }
                   >
-                    <div className="upload-icon">📸</div>
-                    <div className="upload-text">Upload Product Images</div>
-                    <div className="upload-subtext">
+                    <div className="text-5xl mb-3">📸</div>
+                    <div className="text-lg font-semibold text-gray-900 mb-2">Upload Product Images</div>
+                    <div className="text-sm text-gray-600 mb-1">
                       Drag & drop images here or click to browse
                     </div>
-                    <div className="upload-subtext">
+                    <div className="text-sm text-gray-600 mb-4">
                       Supports JPG, PNG, WEBP (Max 5MB each)
                     </div>
-                    <button type="button" className="upload-button">
+                    <button type="button" className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-lg transition-all duration-300">
                       Choose Files
                     </button>
                     <input
@@ -419,17 +423,17 @@ const AddProduct = () => {
                   </div>
 
                   {formData.images.length > 0 && (
-                    <div className="preview-grid">
+                    <div className="mt-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                       {formData.images.map((image) => (
-                        <div key={image.id} className="preview-item">
+                        <div key={image.id} className="relative group">
                           <img
                             src={image.preview}
                             alt="Preview"
-                            className="preview-image"
+                            className="w-full h-32 object-cover rounded-lg shadow-md"
                           />
                           <button
                             type="button"
-                            className="remove-image"
+                            className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-lg"
                             onClick={() => handleRemoveImage(image.id)}
                           >
                             ×
@@ -440,45 +444,47 @@ const AddProduct = () => {
                   )}
                 </div>
 
-                <div className="section-divider"></div>
+                <div className="border-t border-gray-200 pt-8 mb-8"></div>
 
                 {/* Additional Information */}
-                <div className="form-section">
-                  <h2 className="section-title">
-                    <span>🔍</span>
+                <div className="mb-8">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                    <span className="text-2xl mr-3">🔍</span>
                     Additional Information
                   </h2>
 
-                  <div className="form-grid">
-                    <div className="form-group">
-                      <label className="form-label">Location</label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
                       <input
                         type="text"
                         name="location"
                         value={formData.location}
                         onChange={handleInputChange}
-                        className="form-input"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                         placeholder="Farm location"
                       />
                     </div>
 
-                    <div className="form-group">
-                      <label className="form-label">Certifications</label>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Certifications</label>
                       <input
                         type="text"
                         name="certifications"
                         value={formData.certifications}
                         onChange={handleInputChange}
-                        className="form-input"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                         placeholder="e.g., Organic, ISO, etc."
                       />
                     </div>
                   </div>
 
-                  <div className="form-grid full-width">
+                  <div className="space-y-4">
                     <div
-                      className={`availability-toggle ${
-                        formData.availability ? "active" : ""
+                      className={`flex items-center p-4 rounded-lg border-2 cursor-pointer transition-all duration-300 ${
+                        formData.availability
+                          ? "border-green-500 bg-green-50"
+                          : "border-gray-300 bg-gray-50 hover:bg-gray-100"
                       }`}
                       onClick={() =>
                         setFormData((prev) => ({
@@ -487,10 +493,16 @@ const AddProduct = () => {
                         }))
                       }
                     >
-                      <div className="toggle-switch"></div>
+                      <div className={`w-5 h-5 rounded border-2 mr-3 flex items-center justify-center ${
+                        formData.availability
+                          ? "border-green-500 bg-green-500"
+                          : "border-gray-300 bg-white"
+                      }`}>
+                        {formData.availability && <span className="text-white text-sm">✓</span>}
+                      </div>
                       <div>
-                        <div className="toggle-label">Available for Sale</div>
-                        <div className="toggle-status">
+                        <div className="font-semibold text-gray-900">Available for Sale</div>
+                        <div className="text-sm text-gray-600">
                           {formData.availability
                             ? "Product is visible to buyers"
                             : "Product is hidden from buyers"}
@@ -499,8 +511,10 @@ const AddProduct = () => {
                     </div>
 
                     <div
-                      className={`availability-toggle ${
-                        formData.organic ? "active" : ""
+                      className={`flex items-center p-4 rounded-lg border-2 cursor-pointer transition-all duration-300 ${
+                        formData.organic
+                          ? "border-green-500 bg-green-50"
+                          : "border-gray-300 bg-gray-50 hover:bg-gray-100"
                       }`}
                       onClick={() =>
                         setFormData((prev) => ({
@@ -509,10 +523,16 @@ const AddProduct = () => {
                         }))
                       }
                     >
-                      <div className="toggle-switch"></div>
+                      <div className={`w-5 h-5 rounded border-2 mr-3 flex items-center justify-center ${
+                        formData.organic
+                          ? "border-green-500 bg-green-500"
+                          : "border-gray-300 bg-white"
+                      }`}>
+                        {formData.organic && <span className="text-white text-sm">✓</span>}
+                      </div>
                       <div>
-                        <div className="toggle-label">Organic Product</div>
-                        <div className="toggle-status">
+                        <div className="font-semibold text-gray-900">Organic Product</div>
+                        <div className="text-sm text-gray-600">
                           {formData.organic
                             ? "Certified organic farming"
                             : "Conventional farming methods"}

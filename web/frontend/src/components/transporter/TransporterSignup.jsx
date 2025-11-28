@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const TransporterSignup = ({ onNavigate }) => {
+  const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -138,15 +139,55 @@ const TransporterSignup = ({ onNavigate }) => {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Navigate to dashboard
-      if (onNavigate) {
-        onNavigate('transporter-dashboard');
-      }
+      // Store transporter data in localStorage
+      const transporterData = {
+        id: Math.floor(Math.random() * 10000),
+        name: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        vehicleType: formData.vehicleType,
+        vehicleModel: formData.vehicleModel,
+        vehicleYear: formData.vehicleYear,
+        licensePlate: formData.licensePlate,
+        capacity: formData.capacity,
+        location: formData.location,
+        transporterType: formData.transporterType,
+        registeredAt: new Date().toISOString()
+      };
+      
+      localStorage.setItem('transporterProfile', JSON.stringify(transporterData));
+
+      // Navigate to my deliveries
+      navigate('/transporter-my-deliveries');
     } catch (error) {
       setErrors({ submit: error.message || 'Registration failed. Please try again.' });
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleSkipToDemo = () => {
+    // Create example transporter profile for demo
+    const demoTransporterData = {
+      id: Math.floor(Math.random() * 10000),
+      name: 'Ahmed Bensaid',
+      email: 'ahmed.bensaid@demo.com',
+      phone: '+213 555 123 789',
+      vehicleType: 'Refrigerated Truck',
+      vehicleModel: 'Mercedes-Benz Actros',
+      vehicleYear: '2022',
+      licensePlate: 'AL-123-ABC',
+      capacity: '5 Tons',
+      location: 'Algiers',
+      transporterType: 'company',
+      registeredAt: new Date().toISOString()
+    };
+    
+    // Store demo transporter data
+    localStorage.setItem('transporterProfile', JSON.stringify(demoTransporterData));
+    
+    // Navigate to my deliveries
+    navigate('/transporter-my-deliveries');
   };
 
   const renderStepIndicator = () => (
@@ -530,6 +571,17 @@ const TransporterSignup = ({ onNavigate }) => {
           )}
 
           {renderStepContent()}
+
+          {/* Skip Demo Button */}
+          <div className="text-center mb-4 pb-2 border-b border-gray-200">
+            <button
+              type="button"
+              onClick={handleSkipToDemo}
+              className="text-sm text-green-600 hover:text-green-700 font-medium underline transition-colors"
+            >
+              Skip to Demo → Browse Available Jobs
+            </button>
+          </div>
 
           {/* Navigation Buttons */}
           <div className="flex justify-between pt-6">

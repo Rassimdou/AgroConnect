@@ -72,7 +72,7 @@ const HowItWorks = ({ onGetStarted }) => {
   ];
 
   return (
-    <section className="py-12 sm:py-16 lg:py-20 bg-white">
+    <section id="how-it-works" className="py-12 sm:py-16 lg:py-20 bg-white">
       <div className="container mx-auto px-4 sm:px-6">
         {/* Section Header */}
         <div className={`text-center mb-16 transform transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
