@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Header from '../header';
 import Footer from '../footer';
+import { productAPI } from '../../services/api';
 
 // Dummy product data with traceability information
 const productData = {
@@ -40,10 +41,33 @@ const ProductDetail = () => {
     { id: 1, sender: 'producer', message: 'Hello! I\'m happy to help you with any questions about our fresh tomatoes.', timestamp: new Date() }
   ]);
   const [newMessage, setNewMessage] = useState('');
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const product = productData;
+  // Fetch product data from API
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        setLoading(true);
+        const response = await productAPI.getProductById(id);
+        setProduct(response.data || response);
+      } catch (err) {
+        console.error('Error fetching product:', err);
+        setError('Failed to load product details. Please try again later.');
+        // Fallback to dummy data if API fails
+        setProduct(productData);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchProduct();
+    }
+  }, [id]);
 
   const getQualityScoreColor = (score) => {
     if (score >= 80) return 'text-green-600 bg-green-100';
@@ -103,6 +127,76 @@ const ProductDetail = () => {
       handleSendMessage();
     }
   };
+
+  // Show loading state
+  if (loading) {
+    return (
+      <>
+        <Header isBuyerMode={true} />
+        <div className="pt-20 min-h-screen bg-gradient-to-br from-gray-50 to-white flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-green-600 mx-auto mb-4"></div>
+            <p className="text-gray-600 text-lg">Loading product details...</p>
+          </div>
+        </div>
+        <Footer />
+      </>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <>
+        <Header isBuyerMode={true} />
+        <div className="pt-20 min-h-screen bg-gradient-to-br from-gray-50 to-white flex items-center justify-center">
+          <div className="text-center max-w-md mx-auto px-4">
+            <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <svg className="w-12 h-12 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+              </svg>
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-3">Oops! Something went wrong</h3>
+            <p className="text-gray-600 mb-8">{error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
+            >
+              Try Again
+            </button>
+          </div>
+        </div>
+        <Footer />
+      </>
+    );
+  }
+
+  // Show error if no product found
+  if (!product) {
+    return (
+      <>
+        <Header isBuyerMode={true} />
+        <div className="pt-20 min-h-screen bg-gradient-to-br from-gray-50 to-white flex items-center justify-center">
+          <div className="text-center max-w-md mx-auto px-4">
+            <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.29-1.009-5.203-2.47M12 7v14m0-14l-4 4m4-4l4 4"></path>
+              </svg>
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-3">Product Not Found</h3>
+            <p className="text-gray-600 mb-8">The product you're looking for doesn't exist or has been removed.</p>
+            <button
+              onClick={() => navigate('/marketplace')}
+              className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
+            >
+              Back to Marketplace
+            </button>
+          </div>
+        </div>
+        <Footer />
+      </>
+    );
+  }
 
   return (
     <>
