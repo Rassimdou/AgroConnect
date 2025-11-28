@@ -69,3 +69,30 @@ Content-Type: application/json
 
 
 }
+####
+POST http://localhost:3000/api/review/give
+Content-Type: application/json
+
+{
+    "author_id" : 3,
+    "author_type" : "user",
+    "target_id" : 1,
+    "target_type" : "producer",
+    "rating" : 5,
+    "comment" : "Great product!"
+}
+
+####
+GET http://localhost:3000/api/review/getrating/1/producer
+Content-Type: application/json
+
+
+
+####
+
+GET http://localhost:3000/api/review/getrating/1/producer
+Content-Type: application/json
+
+
+    
+
