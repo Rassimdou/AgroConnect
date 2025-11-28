@@ -113,10 +113,10 @@ const check_acount_age = async (producer_id) => {
     try {
         let rating = 0;
         const connection = await getConnection();
-        const [result] = await connection.promise().query('SELECT created_at FROM producers WHERE id = ?;', [producer_id]);
-        const producer_created_at = result[0].created_at;
+        const [result] = await connection.promise().query('SELECT joined_at FROM producers WHERE id = ?;', [producer_id]);
+        const producer_joined_at = result[0].joined_at;
         const current_date = new Date();
-        const time_difference = current_date - producer_created_at;
+        const time_difference = current_date - producer_joined_at;
         const days_difference = time_difference / (1000 * 60 * 60 * 24);
         if (days_difference < 1) {
             rating = 10;
@@ -137,8 +137,8 @@ const check_acount_age = async (producer_id) => {
 
 };
 
-const validate_fraud = async (listingName, category, description, price, imageBadnessScore = null) => {
-    const API_MODEL = 'gemini-2.5-flash';
+const validate_fraud = async (listingName, category, description, price) => {
+    const API_MODEL = 'gemini-2.5-flash'; // or 'gemini-1.5-flash'
     const MAX_RETRIES = 3;
 
     const promptPath = path.join(__dirname, "prompt2.txt");
@@ -146,7 +146,7 @@ const validate_fraud = async (listingName, category, description, price, imageBa
 
     // Replace placeholders in the prompt
     prompt = prompt.replace(
-        '[Insert the product name here, e.g., "Brand New iPhone 15 Pro Max".]',
+        '[Insert the product name here, e.g., "Fresh/potato".]',
         `"${listingName}"`
     );
 
@@ -165,29 +165,18 @@ const validate_fraud = async (listingName, category, description, price, imageBa
         `"${price}"`
     );
 
-    const imageScoreText = imageBadnessScore !== null && imageBadnessScore !== undefined
-        ? `${imageBadnessScore}`
-        : 'N/A';
-
-    prompt = prompt.replace(
-        '[Insert the score from image analysis here, e.g., "7.5". If not available, use "N/A".]',
-        imageScoreText
-    );
-
-    const textPart = { text: prompt };
-
     let lastError = null;
 
     // Retry logic
     for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
         try {
-            const response = await ai.models.generateContent({
-                model: API_MODEL,
-                contents: [textPart],
-            });
+            // Get the model
+            const model = ai.getGenerativeModel({ model: API_MODEL });
 
-            // Extract the score from the response
-            const responseText = response.text.trim();
+            // Generate content with correct format
+            const result = await model.generateContent(prompt);
+            const response = await result.response;
+            const responseText = response.text().trim();
 
             // Try to parse the score (should be a number)
             const score = parseFloat(responseText);
@@ -223,7 +212,6 @@ const validate_fraud = async (listingName, category, description, price, imageBa
         fraudRiskScore: null
     };
 }
-
 const check_anomaly = async (producer_id) => {
     try {
         let rating = 0;

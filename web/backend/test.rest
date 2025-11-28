@@ -64,5 +64,8 @@ POST http://localhost:3000/api/ai/validate/product
 Content-Type: application/json
 
 {
-    
+    "product_id" : 3,
+    "image_path" : "../uploads/DSC_9353.webp"
+
+
 }
