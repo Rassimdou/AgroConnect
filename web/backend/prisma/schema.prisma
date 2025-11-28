@@ -1,0 +1,315 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserType {
+  user
+  producer
+  transporter
+  service
+  admin
+}
+
+enum VerifiedStatus {
+  unverified
+  pending
+  verified
+  banned
+}
+
+enum UserVerifiedStatus {
+  unverified
+  verified
+  banned
+}
+
+enum PaymentStatus {
+  pending
+  paid
+  failed
+  refunded
+}
+
+enum OrderStatus {
+  pending
+  processing
+  ready_for_pickup
+  shipped
+  delivered
+  cancelled
+}
+
+enum ProductState {
+  pending_ai
+  recommended_by_ai
+  approved_by_ai
+  revoked_by_ai
+}
+
+enum ReportType {
+  spam
+  abuse
+  fake_product
+  other
+}
+
+enum ReportStatus {
+  pending
+  investigating
+  resolved
+  dismissed
+}
+
+enum ReporterType {
+  user
+  producer
+  transporter
+  service
+}
+
+enum ReportedType {
+  user
+  producer
+  transporter
+  service
+  product
+}
+
+enum ReviewTargetType {
+  producer
+  transporter
+  service
+}
+
+enum ServiceType {
+  veterinarian
+  feed_supplier
+  agronomist
+  equipment_repair
+  mechanic
+  consultant
+  other
+}
+
+model Admin {
+  id         Int       @id @default(autoincrement())
+  fullname   String    @db.VarChar(255)
+  email      String    @unique @db.VarChar(255)
+  password   String    @db.VarChar(255)
+  created_at DateTime? @default(now()) @db.Timestamp(0)
+
+  @@map("admins")
+}
+
+model User {
+  id              Int                 @id @default(autoincrement())
+  fullname        String              @db.VarChar(255)
+  email           String              @unique @db.VarChar(255)
+  password        String              @db.VarChar(255)
+  phone_number    String?             @db.VarChar(20)
+  verified_status UserVerifiedStatus? @default(unverified)
+  created_at      DateTime?           @default(now()) @db.Timestamp(0)
+
+  orders Order[]
+
+  @@map("users")
+}
+
+model Producer {
+  id              Int             @id @default(autoincrement())
+  fullname        String          @db.VarChar(255)
+  email           String          @unique @db.VarChar(255)
+  password        String          @db.VarChar(255)
+  phone_number    String?         @db.VarChar(20)
+  location        String?         @db.VarChar(255)
+  domain          String?         @db.VarChar(100)
+  verified_status VerifiedStatus? @default(unverified)
+  joined_at       DateTime?       @default(now()) @db.Timestamp(0)
+
+  products Product[]
+  orders   Order[]
+
+  @@map("producers")
+}
+
+model Transporter {
+  id              Int             @id @default(autoincrement())
+  fullname        String          @db.VarChar(255)
+  email           String          @unique @db.VarChar(255)
+  password        String          @db.VarChar(255)
+  phone_number    String?         @db.VarChar(20)
+  location        String?         @db.VarChar(255)
+  vehicle_type    String?         @db.VarChar(100)
+  vehicle_plate   String?         @db.VarChar(50)
+  verified_status VerifiedStatus? @default(unverified)
+  joined_at       DateTime?       @default(now()) @db.Timestamp(0)
+
+  @@map("transporters")
+}
+
+model Service {
+  id              Int             @id @default(autoincrement())
+  fullname        String          @db.VarChar(255)
+  email           String          @unique @db.VarChar(255)
+  password        String          @db.VarChar(255)
+  service_type    ServiceType
+  location        String?         @db.VarChar(255)
+  verified_status VerifiedStatus? @default(unverified)
+  joined_at       DateTime?       @default(now()) @db.Timestamp(0)
+
+  @@map("services")
+}
+
+model Product {
+  id                   Int           @id @default(autoincrement())
+  producer_id          Int
+  name                 String        @db.VarChar(255)
+  category             String?       @db.VarChar(100)
+  description          String?       @db.Text
+  price                Decimal       @db.Decimal(10, 2)
+  quantity_available   Int
+  minimum_order_amount Int?          @default(1)
+  state                ProductState? @default(pending_ai)
+  created_at           DateTime?     @default(now()) @db.Timestamp(0)
+
+  producer       Producer        @relation(fields: [producer_id], references: [id], onDelete: Cascade)
+  images         ProductImage[]
+  order_details  OrderDetail[]
+
+  @@index([producer_id])
+  @@map("products")
+}
+
+model ProductImage {
+  id         Int     @id @default(autoincrement())
+  product_id Int
+  image_url  String  @db.VarChar(500)
+  is_primary Boolean? @default(false) @db.TinyInt
+
+  product Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
+
+  @@index([product_id])
+  @@map("product_images")
+}
+
+model Order {
+  id               Int          @id @default(autoincrement())
+  user_id          Int
+  producer_id      Int
+  order_date       DateTime?    @default(now()) @db.Timestamp(0)
+  quantity         Decimal      @db.Decimal(10, 2)
+  shipping_address String       @db.Text
+  payment_status   PaymentStatus @default(pending)
+  order_status     OrderStatus   @default(pending)
+
+  user          User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  producer      Producer      @relation(fields: [producer_id], references: [id], onDelete: Cascade)
+  order_details OrderDetail[]
+
+  @@index([user_id])
+  @@index([producer_id])
+  @@map("orders")
+}
+
+model OrderDetail {
+  id         Int     @id @default(autoincrement())
+  order_id   Int
+  product_id Int
+  quantity   Int
+  unit_price Decimal @db.Decimal(10, 2)
+  subtotal   Decimal @db.Decimal(10, 2)
+
+  order   Order   @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
+
+  @@index([order_id])
+  @@index([product_id])
+  @@map("order_details")
+}
+
+model ChatConversation {
+  id                  Int      @id @default(autoincrement())
+  participant_1_id    Int
+  participant_1_type  UserType
+  participant_2_id    Int
+  participant_2_type  UserType
+  last_message_at     DateTime? @default(now()) @db.Timestamp(0)
+  created_at          DateTime? @default(now()) @db.Timestamp(0)
+
+  messages ChatMessage[]
+
+  @@map("chat_conversations")
+}
+
+model ChatMessage {
+  id              Int       @id @default(autoincrement())
+  conversation_id Int
+  sender_id       Int
+  sender_type     UserType
+  message_content String    @db.Text
+  is_read         Boolean?  @default(false) @db.TinyInt
+  created_at      DateTime? @default(now()) @db.Timestamp(0)
+
+  conversation ChatConversation @relation(fields: [conversation_id], references: [id], onDelete: Cascade)
+
+  @@index([conversation_id])
+  @@map("chat_messages")
+}
+
+model OtpVerification {
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  user_type  UserType
+  otp_code   String   @db.VarChar(255)
+  created_at DateTime? @default(now()) @db.Timestamp(0)
+  expires_at DateTime  @db.Timestamp(0)
+  used       Boolean?  @default(false) @db.TinyInt
+
+  @@map("otp_verifications")
+}
+
+model Report {
+  id            Int           @id @default(autoincrement())
+  reporter_id   Int
+  reporter_type ReporterType
+  reported_id   Int
+  reported_type ReportedType
+  cause         String        @db.VarChar(255)
+  report_type   ReportType
+  description   String?       @db.Text
+  status        ReportStatus? @default(pending)
+  created_at    DateTime?     @default(now()) @db.Timestamp(0)
+
+  @@map("reports")
+}
+
+model Review {
+  id          Int              @id @default(autoincrement())
+  author_id   Int
+  author_type ReporterType
+  target_id   Int
+  target_type ReviewTargetType
+  rating      Int?
+  comment     String?          @db.Text
+  created_at  DateTime?        @default(now()) @db.Timestamp(0)
+
+  @@map("reviews")
+}
+
+model ReviewSummary {
+  id              Int              @id @default(autoincrement())
+  target_id       Int
+  target_type     ReviewTargetType
+  total_score_sum Int?             @default(0)
+  review_count    Int?             @default(0)
+  average_rating  Decimal?         @default(0.00) @db.Decimal(3, 2)
+
+  @@index([target_id, target_type])
+  @@map("review_summaries")
+}
