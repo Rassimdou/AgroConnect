@@ -19,13 +19,18 @@ import Cart from './components/buyer/Cart'
 import MyOrders from './components/buyer/MyOrders'
 import Profile from './components/buyer/Profile'
 import { ROUTES, USER_TYPE_ROUTES } from './routes'
-import FarmerSignin from './farmer/FarmerSignin'
-import FarmerSignup from './farmer/FarmerSignup'
-import FarmerDashboard from './farmer/Dashboard'
-import FarmerAddProduct from './farmer/AddProduct'
-import FarmerMyProducts from './farmer/MyProducts'
-import FarmerOrders from './farmer/Orders'
-import FarmerProfile from './farmer/Profile'
+import FarmerSignin from './components/farmer/FarmerSignin'
+import FarmerSignup from './components/farmer/FarmerSignup'
+import FarmerDashboard from './components/farmer/Dashboard'
+import FarmerMarketplace from './components/farmer/Marketplace'
+import FarmerAddProduct from './components/farmer/AddProduct'
+import FarmerMyProducts from './components/farmer/MyProducts'
+import FarmerOrders from './components/farmer/Orders'
+import FarmerProfile from './components/farmer/Profile'
+import TransporterSignup from './components/transporter/TransporterSignup'
+import TransporterAvailableJobs from './components/transporter/AvailableJobs'
+import TransporterMyDeliveries from './components/transporter/MyDeliveries'
+import TransporterProfile from './components/transporter/Profile'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -100,10 +105,23 @@ function App() {
           </>
         } />
         <Route path="/farmer-dashboard" element={<FarmerDashboard />} />
+        <Route path="/farmer-marketplace" element={<FarmerMarketplace />} />
         <Route path="/farmer-add-product" element={<FarmerAddProduct />} />
         <Route path="/farmer-my-products" element={<FarmerMyProducts />} />
         <Route path="/farmer-orders" element={<FarmerOrders />} />
         <Route path="/farmer-profile" element={<FarmerProfile />} />
+
+        {/* Transporter Routes */}
+        <Route path="/transporter-signup" element={
+          <>
+            <Header />
+            <TransporterSignup />
+            <Footer />
+          </>
+        } />
+        <Route path="/transporter-available-jobs" element={<TransporterAvailableJobs />} />
+        <Route path="/transporter-my-deliveries" element={<TransporterMyDeliveries />} />
+        <Route path="/transporter-profile" element={<TransporterProfile />} />
 
         {/* Redirect unknown routes to home */}
         <Route path="*" element={<Navigate to="/" replace />} />

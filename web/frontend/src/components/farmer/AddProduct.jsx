@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
-import Header from "../components/header";
-import Footer from "../components/footer";
-import "./AddProduct.css";
+import { useNavigate } from "react-router-dom";
+import Header from "../header";
+import Footer from "../footer";
 
-const AddProduct = ({ onNavigate }) => {
+const AddProduct = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     productName: "",
@@ -123,11 +124,9 @@ const AddProduct = ({ onNavigate }) => {
 
   const units = [
     { value: "kg", label: "Kilogram (kg)" },
-    { value: "g", label: "Gram (g)" },
-    { value: "lb", label: "Pound (lb)" },
+    { value: "t", label: "ton" },
     { value: "piece", label: "Piece" },
     { value: "bunch", label: "Bunch" },
-    { value: "crate", label: "Crate" },
   ];
 
   const categories = {
@@ -167,76 +166,81 @@ const AddProduct = ({ onNavigate }) => {
 
   return (
     <>
-      <Header isFarmerMode={true} onNavigate={onNavigate} />
-      <div className="add-product-page">
-        {/* Header */}
-        <div className="add-product-header">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+      <Header isFarmerMode={true} />
+      <div className="pt-20 min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/20">
+
+        {/* Header Section */}
+        <div className={`mb-8 transform transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+          <div className="bg-gradient-to-r from-green-600 to-emerald-600 rounded-2xl p-8 text-white shadow-xl">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
               <div>
-                <h1 className="add-product-title">🌱 Add New Product</h1>
-                <p className="add-product-subtitle">
-                  List your farm products and reach more customers
-                </p>
+                <h1 className="text-3xl md:text-4xl font-bold mb-2">🌱 Add New Product</h1>
+                <p className="text-green-100 text-lg">List your farm products and reach more customers</p>
               </div>
-              <button
-                onClick={() => onNavigate("my-products")}
-                className="mt-4 lg:mt-0 bg-white text-green-600 px-6 py-2 rounded-lg font-semibold hover:bg-green-50 transition-colors"
-              >
-                View My Products
-              </button>
+              <div className="mt-6 md:mt-0">
+                <button
+                  onClick={() => navigate('/farmer-my-products')}
+                  className="bg-white text-green-600 px-8 py-3 rounded-xl font-semibold hover:bg-green-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+                >
+                  <svg className="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+                  </svg>
+                  View My Products
+                </button>
+              </div>
             </div>
           </div>
         </div>
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="product-form-container">
+          <div className="max-w-4xl mx-auto">
+
             {/* Success Message */}
             {showSuccess && (
-              <div className="success-message animate-entrance visible">
-                <span>✅</span>
-                <span>Product added successfully! Redirecting...</span>
+              <div className="mb-8 bg-green-50 border border-green-200 rounded-2xl p-6 text-green-800 transform transition-all duration-500">
+                <div className="flex items-center">
+                  <svg className="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <span className="font-semibold">Product added successfully! Redirecting...</span>
+                </div>
               </div>
             )}
 
-            <div
-              className={`product-form-card animate-entrance ${
-                isVisible ? "visible" : ""
-              }`}
-            >
+            <div className={`bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 p-8 transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
               <form onSubmit={handleSubmit}>
                 {/* Basic Information */}
-                <div className="form-section">
-                  <h2 className="section-title">
-                    <span>📝</span>
+                <div className="mb-8">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                    <span className="text-2xl mr-3">📝</span>
                     Basic Information
                   </h2>
 
-                  <div className="form-grid">
-                    <div className="form-group">
-                      <label className="form-label">
-                        Product Name <span className="required-star">*</span>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Product Name <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
                         name="productName"
                         value={formData.productName}
                         onChange={handleInputChange}
-                        className="form-input"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                         placeholder="e.g., Organic Tomatoes"
                         required
                       />
                     </div>
 
-                    <div className="form-group">
-                      <label className="form-label">
-                        Product Type <span className="required-star">*</span>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Product Type <span className="text-red-500">*</span>
                       </label>
                       <select
                         name="productType"
                         value={formData.productType}
                         onChange={handleInputChange}
-                        className="form-select"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                         required
                       >
                         {productTypes.map((type) => (
@@ -247,15 +251,15 @@ const AddProduct = ({ onNavigate }) => {
                       </select>
                     </div>
 
-                    <div className="form-group">
-                      <label className="form-label">
-                        Category <span className="required-star">*</span>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Category <span className="text-red-500">*</span>
                       </label>
                       <select
                         name="category"
                         value={formData.category}
                         onChange={handleInputChange}
-                        className="form-select"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                         required
                       >
                         <option value="">Select a category</option>
@@ -267,28 +271,27 @@ const AddProduct = ({ onNavigate }) => {
                       </select>
                     </div>
 
-                    <div className="form-group">
-                      <label className="form-label">Harvest Date</label>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Harvest Date</label>
                       <input
                         type="date"
                         name="harvestDate"
                         value={formData.harvestDate}
                         onChange={handleInputChange}
-                        className="form-input"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                       />
                     </div>
                   </div>
 
-                  <div className="form-group full-width">
-                    <label className="form-label">
-                      Product Description{" "}
-                      <span className="required-star">*</span>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Product Description <span className="text-red-500">*</span>
                     </label>
                     <textarea
                       name="description"
                       value={formData.description}
                       onChange={handleInputChange}
-                      className="form-textarea"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                       placeholder="Describe your product... (quality, freshness, farming methods, etc.)"
                       rows="4"
                       required
@@ -296,28 +299,28 @@ const AddProduct = ({ onNavigate }) => {
                   </div>
                 </div>
 
-                <div className="section-divider"></div>
+                <div className="border-t border-gray-200 pt-8 mb-8"></div>
 
                 {/* Pricing & Quantity */}
-                <div className="form-section">
-                  <h2 className="section-title">
-                    <span>💰</span>
+                <div className="mb-8">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                    <span className="text-2xl mr-3">💰</span>
                     Pricing & Quantity
                   </h2>
 
-                  <div className="pricing-grid">
-                    <div className="form-group">
-                      <label className="form-label">
-                        Price <span className="required-star">*</span>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Price <span className="text-red-500">*</span>
                       </label>
-                      <div className="price-input-container">
-                        <span className="currency-symbol">DA</span>
+                      <div className="relative">
+                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 font-medium">DA</span>
                         <input
                           type="number"
                           name="price"
                           value={formData.price}
                           onChange={handleInputChange}
-                          className="form-input currency-input"
+                          className="w-full pl-12 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                           placeholder="0.00"
                           min="0"
                           step="0.01"
@@ -326,15 +329,15 @@ const AddProduct = ({ onNavigate }) => {
                       </div>
                     </div>
 
-                    <div className="form-group">
-                      <label className="form-label">
-                        Unit <span className="required-star">*</span>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Unit <span className="text-red-500">*</span>
                       </label>
                       <select
                         name="unit"
                         value={formData.unit}
                         onChange={handleInputChange}
-                        className="form-select unit-select"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                         required
                       >
                         {units.map((unit) => (
@@ -345,31 +348,30 @@ const AddProduct = ({ onNavigate }) => {
                       </select>
                     </div>
 
-                    <div className="form-group">
-                      <label className="form-label">
-                        Available Quantity{" "}
-                        <span className="required-star">*</span>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Available Quantity <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="number"
                         name="quantity"
                         value={formData.quantity}
                         onChange={handleInputChange}
-                        className="form-input"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                         placeholder="e.g., 100"
                         min="1"
                         required
                       />
                     </div>
 
-                    <div className="form-group">
-                      <label className="form-label">Minimum Order</label>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Minimum Order</label>
                       <input
                         type="number"
                         name="minOrder"
                         value={formData.minOrder}
                         onChange={handleInputChange}
-                        className="form-input"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                         placeholder="e.g., 1"
                         min="1"
                       />
@@ -521,27 +523,29 @@ const AddProduct = ({ onNavigate }) => {
                 </div>
 
                 {/* Form Actions */}
-                <div className="form-actions">
+                <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200">
                   <button
                     type="button"
-                    className="cancel-button"
-                    onClick={() => onNavigate("farmer-dashboard")}
+                    className="px-8 py-3 border-2 border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-all duration-300 transform hover:scale-105"
+                    onClick={() => navigate('/farmer-dashboard')}
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="submit-button"
+                    className="px-8 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-semibold hover:from-green-700 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled={isLoading}
                   >
                     {isLoading ? (
                       <>
-                        <div className="loading-spinner"></div>
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2 inline-block"></div>
                         Adding Product...
                       </>
                     ) : (
                       <>
-                        <span>✅</span>
+                        <svg className="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
                         Add Product
                       </>
                     )}

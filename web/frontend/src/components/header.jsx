@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Header = ({ isBuyerMode = false }) => {
+const Header = ({ isBuyerMode = false, isFarmerMode = false, isTransporterMode = false }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -65,6 +65,79 @@ const Header = ({ isBuyerMode = false }) => {
                 </svg>
                 <span>Profile</span>
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 group-hover:w-full transition-all duration-300"></span>
+              </button>
+            </>
+          ) : isFarmerMode ? (
+            // Farmer Navigation
+            <>
+              <button onClick={() => handleNavigation('/farmer-dashboard')} className="flex items-center space-x-1 relative group hover:text-green-600 transition-all duration-300 font-medium">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2 2z"></path>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z"></path>
+                </svg>
+                <span>Dashboard</span>
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 group-hover:w-full transition-all duration-300"></span>
+              </button>
+              <button onClick={() => handleNavigation('/farmer-marketplace')} className="flex items-center space-x-1 relative group hover:text-green-600 transition-all duration-300 font-medium">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+                <span>Marketplace</span>
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 group-hover:w-full transition-all duration-300"></span>
+              </button>
+              <button onClick={() => handleNavigation('/farmer-my-products')} className="flex items-center space-x-1 relative group hover:text-green-600 transition-all duration-300 font-medium">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                </svg>
+                <span>My Products</span>
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 group-hover:w-full transition-all duration-300"></span>
+              </button>
+              <button onClick={() => handleNavigation('/farmer-orders')} className="flex items-center space-x-1 relative group hover:text-green-600 transition-all duration-300 font-medium">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span>Orders</span>
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 group-hover:w-full transition-all duration-300"></span>
+              </button>
+              <button onClick={() => handleNavigation('/farmer-profile')} className="flex items-center space-x-1 relative group hover:text-green-600 transition-all duration-300 font-medium">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                </svg>
+                <span>Profile</span>
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 group-hover:w-full transition-all duration-300"></span>
+              </button>
+            </>
+          ) : isTransporterMode ? (
+            // Transporter Navigation
+            <>
+              <button onClick={() => handleNavigation('/transporter-dashboard')} className="flex items-center space-x-1 relative group hover:text-orange-600 transition-all duration-300 font-medium">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2 2z"></path>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z"></path>
+                </svg>
+                <span>Dashboard</span>
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-orange-600 group-hover:w-full transition-all duration-300"></span>
+              </button>
+              <button onClick={() => handleNavigation('/transporter-available-jobs')} className="flex items-center space-x-1 relative group hover:text-orange-600 transition-all duration-300 font-medium">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+                <span>Available Jobs</span>
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-orange-600 group-hover:w-full transition-all duration-300"></span>
+              </button>
+              <button onClick={() => handleNavigation('/transporter-my-deliveries')} className="flex items-center space-x-1 relative group hover:text-orange-600 transition-all duration-300 font-medium">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V7M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path>
+                </svg>
+                <span>My Deliveries</span>
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-orange-600 group-hover:w-full transition-all duration-300"></span>
+              </button>
+              <button onClick={() => handleNavigation('/transporter-profile')} className="flex items-center space-x-1 relative group hover:text-orange-600 transition-all duration-300 font-medium">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                </svg>
+                <span>Profile</span>
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-orange-600 group-hover:w-full transition-all duration-300"></span>
               </button>
             </>
           ) : (
@@ -169,6 +242,88 @@ const Header = ({ isBuyerMode = false }) => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                 </svg>
                 <span>Profile</span>
+              </button>
+              <button onClick={() => { handleNavigation('/'); setIsMenuOpen(false); }} className="flex items-center space-x-3 py-4 hover:text-red-600 hover:translate-x-3 hover:bg-red-50 rounded-lg px-3 transition-all duration-300 font-medium w-full text-left border-t border-gray-200">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                </svg>
+                <span>Sign Out</span>
+              </button>
+            </>
+          ) : isFarmerMode ? (
+            // Farmer Mobile Navigation
+            <>
+              <button onClick={() => { handleNavigation('/farmer-dashboard'); setIsMenuOpen(false); }} className="flex items-center space-x-3 py-4 hover:text-green-600 hover:translate-x-3 hover:bg-green-50 rounded-lg px-3 transition-all duration-300 font-medium w-full text-left">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2 2z"></path>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z"></path>
+                </svg>
+                <span>Dashboard</span>
+              </button>
+              <button onClick={() => { handleNavigation('/farmer-marketplace'); setIsMenuOpen(false); }} className="flex items-center space-x-3 py-4 hover:text-green-600 hover:translate-x-3 hover:bg-green-50 rounded-lg px-3 transition-all duration-300 font-medium w-full text-left">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+                <span>Marketplace</span>
+              </button>
+              <button onClick={() => { handleNavigation('/farmer-my-products'); setIsMenuOpen(false); }} className="flex items-center space-x-3 py-4 hover:text-green-600 hover:translate-x-3 hover:bg-green-50 rounded-lg px-3 transition-all duration-300 font-medium w-full text-left">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                </svg>
+                <span>My Products</span>
+              </button>
+              <button onClick={() => { handleNavigation('/farmer-orders'); setIsMenuOpen(false); }} className="flex items-center space-x-3 py-4 hover:text-green-600 hover:translate-x-3 hover:bg-green-50 rounded-lg px-3 transition-all duration-300 font-medium w-full text-left">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span>Orders</span>
+              </button>
+              <button onClick={() => { handleNavigation('/farmer-profile'); setIsMenuOpen(false); }} className="flex items-center space-x-3 py-4 hover:text-green-600 hover:translate-x-3 hover:bg-green-50 rounded-lg px-3 transition-all duration-300 font-medium w-full text-left">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                </svg>
+                <span>Profile</span>
+              </button>
+              <button onClick={() => { handleNavigation('/'); setIsMenuOpen(false); }} className="flex items-center space-x-3 py-4 hover:text-red-600 hover:translate-x-3 hover:bg-red-50 rounded-lg px-3 transition-all duration-300 font-medium w-full text-left border-t border-gray-200">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                </svg>
+                <span>Sign Out</span>
+              </button>
+            </>
+          ) : isTransporterMode ? (
+            // Transporter Mobile Navigation
+            <>
+              <button onClick={() => { handleNavigation('/transporter-dashboard'); setIsMenuOpen(false); }} className="flex items-center space-x-3 py-4 hover:text-orange-600 hover:translate-x-3 hover:bg-orange-50 rounded-lg px-3 transition-all duration-300 font-medium w-full text-left">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2 2z"></path>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z"></path>
+                </svg>
+                <span>Dashboard</span>
+              </button>
+              <button onClick={() => { handleNavigation('/transporter-available-jobs'); setIsMenuOpen(false); }} className="flex items-center space-x-3 py-4 hover:text-orange-600 hover:translate-x-3 hover:bg-orange-50 rounded-lg px-3 transition-all duration-300 font-medium w-full text-left">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+                <span>Available Jobs</span>
+              </button>
+              <button onClick={() => { handleNavigation('/transporter-my-deliveries'); setIsMenuOpen(false); }} className="flex items-center space-x-3 py-4 hover:text-orange-600 hover:translate-x-3 hover:bg-orange-50 rounded-lg px-3 transition-all duration-300 font-medium w-full text-left">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V7M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path>
+                </svg>
+                <span>My Deliveries</span>
+              </button>
+              <button onClick={() => { handleNavigation('/transporter-profile'); setIsMenuOpen(false); }} className="flex items-center space-x-3 py-4 hover:text-orange-600 hover:translate-x-3 hover:bg-orange-50 rounded-lg px-3 transition-all duration-300 font-medium w-full text-left">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                </svg>
+                <span>Profile</span>
+              </button>
+              <button onClick={() => { handleNavigation('/'); setIsMenuOpen(false); }} className="flex items-center space-x-3 py-4 hover:text-red-600 hover:translate-x-3 hover:bg-red-50 rounded-lg px-3 transition-all duration-300 font-medium w-full text-left border-t border-gray-200">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                </svg>
+                <span>Sign Out</span>
               </button>
             </>
           ) : (

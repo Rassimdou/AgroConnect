@@ -56,7 +56,7 @@ const UserTypeSelection = () => {
       } else if (typeId === 'producer') {
         navigate('/farmer-signin');
       } else if (typeId === 'transporter') {
-        navigate('/login'); // For now, transporters use buyer login
+        navigate('/transporter-signup');
       }
     }, 500);
   };

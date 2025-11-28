@@ -60,7 +60,7 @@ export const productAPI = {
     // Get all products for marketplace
     getAllProducts: async () => {
         try {
-            const response = await api.get('/market/Getproduct');
+            const response = await api.get('/market/products');
             return response.data;
         } catch (error) {
             throw error.response?.data || error.message;

@@ -100,30 +100,12 @@ const FarmerSignup = ({ onNavigate }) => {
     setErrors({});
 
     try {
-      // Simulate API call
-      const response = await fetch('/api/farmers/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...formData,
-          verified_status: 'unverified',
-          joined_at: new Date().toISOString()
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // Navigate to dashboard after successful signup
-        setTimeout(() => {
-          if (onNavigate) {
-            onNavigate('farmer-dashboard');
-          }
-        }, 1500);
-      } else {
-        setErrors({ submit: data.message || 'Registration failed. Please try again.' });
+      // Simulate API call, then go directly to dashboard
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      
+      // Navigate directly to dashboard without verification
+      if (onNavigate) {
+        onNavigate('dashboard');
       }
     } catch (error) {
       setErrors({ submit: error.message || 'Registration failed. Please try again.' });

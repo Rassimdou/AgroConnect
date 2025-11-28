@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './FarmerSignin.css';
 
 const FarmerSignin = ({ onNavigate }) => {
   const navigate = useNavigate();
@@ -61,30 +60,17 @@ const FarmerSignin = ({ onNavigate }) => {
     setErrors({});
 
     try {
-      // Simulate API call
-      const response = await fetch('/api/farmers/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // Navigate to dashboard after successful login
-        setTimeout(() => {
-          navigate('/farmer-dashboard');
-        }, 1000);
+      // Simulate API call - then go directly to dashboard
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      
+      // Navigate directly to dashboard without verification
+      if (onNavigate) {
+        onNavigate('dashboard');
       } else {
-        setErrors({ submit: data.message || 'Login failed. Please check your credentials.' });
+        navigate('/farmer-dashboard');
       }
     } catch (error) {
-      setErrors({ submit: 'Network error. Please try again.' });
+      setErrors({ submit: 'An error occurred. Please try again.' });
     } finally {
       setIsLoading(false);
     }
@@ -100,33 +86,37 @@ const FarmerSignin = ({ onNavigate }) => {
   };
 
   return (
-    <div className="farmer-signin-container">
-      <div className={`signin-content animate-entrance ${isVisible ? 'visible' : ''}`}>
-        
+    <div className="pt-20 min-h-screen bg-gradient-to-br from-gray-50 to-white flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className={`max-w-md w-full space-y-8 transform transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+
         {/* Header */}
-        <div className="signin-header">
-          <div className="signin-avatar">
-            <span className="signin-avatar-icon">🌾</span>
+        <div className="text-center">
+          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 transform hover:rotate-12 transition-transform duration-300">
+            <span className="text-2xl">🌾</span>
           </div>
-          <h1 className="signin-title">Welcome Back</h1>
-          <p className="signin-subtitle">Sign in to your farmer account</p>
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">
+            Welcome Back
+          </h2>
+          <p className="text-gray-600">
+            Sign in to your farmer account
+          </p>
         </div>
 
         {/* Form */}
-        <form className="signin-form" onSubmit={handleSubmit}>
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           {errors.submit && (
-            <div className="error-alert">
-              {errors.submit}
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+              <p className="text-red-800 text-sm">{errors.submit}</p>
             </div>
           )}
 
-          <div className="form-fields">
+          <div className="space-y-4">
             {/* Email */}
-            <div className="form-field">
-              <label htmlFor="email" className="form-label">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                 Email Address
               </label>
-              <div className="input-container">
+              <div className="relative">
                 <input
                   id="email"
                   name="email"
@@ -135,22 +125,22 @@ const FarmerSignin = ({ onNavigate }) => {
                   required
                   value={formData.email}
                   onChange={handleInputChange}
-                  className={`form-input ${errors.email ? 'form-input-error' : ''}`}
+                  className={`w-full px-4 py-3 border ${errors.email ? 'border-red-300' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300 pr-10`}
                   placeholder="Enter your email"
                 />
-                <svg className="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="absolute right-3 top-3.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
                 </svg>
               </div>
-              {errors.email && <p className="error-text">{errors.email}</p>}
+              {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
             </div>
 
             {/* Password */}
-            <div className="form-field">
-              <label htmlFor="password" className="form-label">
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
                 Password
               </label>
-              <div className="input-container">
+              <div className="relative">
                 <input
                   id="password"
                   name="password"
@@ -159,47 +149,46 @@ const FarmerSignin = ({ onNavigate }) => {
                   required
                   value={formData.password}
                   onChange={handleInputChange}
-                  className={`form-input ${errors.password ? 'form-input-error' : ''}`}
+                  className={`w-full px-4 py-3 border ${errors.password ? 'border-red-300' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300 pr-10`}
                   placeholder="Enter your password"
                 />
                 <button
                   type="button"
-                  className="password-toggle"
                   onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-3.5 text-gray-400 hover:text-gray-600 transition-colors duration-300"
                 >
                   {showPassword ? (
-                    <svg className="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"></path>
                     </svg>
                   ) : (
-                    <svg className="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                     </svg>
                   )}
                 </button>
               </div>
-              {errors.password && <p className="error-text">{errors.password}</p>}
+              {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
             </div>
           </div>
 
-          {/* Form Options */}
-          <div className="form-options">
-            <label className="remember-me">
+          {/* Remember Me & Forgot Password */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
               <input
-                type="checkbox"
+                id="remember-me"
                 name="rememberMe"
+                type="checkbox"
                 checked={formData.rememberMe}
                 onChange={handleInputChange}
-                className="remember-checkbox"
+                className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
               />
-              <span className="remember-label">Remember me</span>
-            </label>
-            <button
-              type="button"
-              className="forgot-password"
-              onClick={handleForgotPassword}
-            >
+              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
+                Remember me
+              </label>
+            </div>
+            <button type="button" onClick={handleForgotPassword} className="text-sm text-green-600 hover:text-green-700 font-medium transition-colors duration-300">
               Forgot password?
             </button>
           </div>
@@ -208,15 +197,15 @@ const FarmerSignin = ({ onNavigate }) => {
           <button
             type="submit"
             disabled={isLoading}
-            className="submit-button"
+            className="w-full bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:transform-none disabled:cursor-not-allowed"
           >
             {isLoading ? (
-              <div className="submit-loading">
-                <svg className="loading-spinner" fill="none" viewBox="0 0 24 24">
+              <div className="flex items-center justify-center">
+                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                Signing In...
+                Signing in...
               </div>
             ) : (
               'Sign In'
@@ -224,14 +213,14 @@ const FarmerSignin = ({ onNavigate }) => {
           </button>
         </form>
 
-        {/* Sign Up Redirect */}
-        <div className="signup-redirect">
-          <p className="signup-text">
+        {/* Sign Up Link */}
+        <div className="text-center">
+          <p className="text-gray-600">
             Don't have an account?{' '}
             <button
               type="button"
-              className="signup-link"
               onClick={handleSignup}
+              className="text-green-600 hover:text-green-700 font-semibold transition-colors duration-300"
             >
               Sign up here
             </button>
@@ -239,10 +228,12 @@ const FarmerSignin = ({ onNavigate }) => {
         </div>
 
         {/* Additional Info */}
-        <div className="info-banner">
-          <p className="info-text">
-            🚀 Access your farm dashboard, manage products, and connect with buyers.
-          </p>
+        <div className="mt-8 text-center">
+          <div className="bg-green-50 rounded-lg p-4">
+            <p className="text-sm text-green-800">
+              🌾 Access your farm dashboard, manage products, and connect with buyers.
+            </p>
+          </div>
         </div>
       </div>
     </div>

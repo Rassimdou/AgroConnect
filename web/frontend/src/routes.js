@@ -11,10 +11,15 @@ export const ROUTES = {
   FARMER_SIGNIN: 'farmer-signin',
   FARMER_SIGNUP: 'farmer-signup',
   FARMER_DASHBOARD: 'farmer-dashboard',
+  FARMER_MARKETPLACE: 'farmer-marketplace',
   FARMER_ADD_PRODUCT: 'farmer-add-product',
   FARMER_MY_PRODUCTS: 'farmer-my-products',
   FARMER_ORDERS: 'farmer-orders',
-  FARMER_PROFILE: 'farmer-profile'
+  FARMER_PROFILE: 'farmer-profile',
+  TRANSPORTER_SIGNUP: 'transporter-signup',
+  TRANSPORTER_AVAILABLE_JOBS: 'transporter-available-jobs',
+  TRANSPORTER_MY_DELIVERIES: 'transporter-my-deliveries',
+  TRANSPORTER_PROFILE: 'transporter-profile'
 };
 
 // Route components mapping
@@ -27,13 +32,18 @@ export const ROUTE_COMPONENTS = {
   [ROUTES.BUYER_CART]: () => import('./components/buyer/Cart'),
   [ROUTES.BUYER_ORDERS]: () => import('./components/buyer/MyOrders'),
   [ROUTES.BUYER_PROFILE]: () => import('./components/buyer/Profile'),
-  [ROUTES.FARMER_SIGNIN]: () => import('./farmer/FarmerSignin'),
-  [ROUTES.FARMER_SIGNUP]: () => import('./farmer/FarmerSignup'),
-  [ROUTES.FARMER_DASHBOARD]: () => import('./farmer/Dashboard'),
-  [ROUTES.FARMER_ADD_PRODUCT]: () => import('./farmer/AddProduct'),
-  [ROUTES.FARMER_MY_PRODUCTS]: () => import('./farmer/MyProducts'),
-  [ROUTES.FARMER_ORDERS]: () => import('./farmer/Orders'),
-  [ROUTES.FARMER_PROFILE]: () => import('./farmer/Profile')
+  [ROUTES.FARMER_SIGNIN]: () => import('./components/farmer/FarmerSignin'),
+  [ROUTES.FARMER_SIGNUP]: () => import('./components/farmer/FarmerSignup'),
+  [ROUTES.FARMER_DASHBOARD]: () => import('./components/farmer/Dashboard'),
+  [ROUTES.FARMER_MARKETPLACE]: () => import('./components/farmer/Marketplace'),
+  [ROUTES.FARMER_ADD_PRODUCT]: () => import('./components/farmer/AddProduct'),
+  [ROUTES.FARMER_MY_PRODUCTS]: () => import('./components/farmer/MyProducts'),
+  [ROUTES.FARMER_ORDERS]: () => import('./components/farmer/Orders'),
+  [ROUTES.FARMER_PROFILE]: () => import('./components/farmer/Profile'),
+  [ROUTES.TRANSPORTER_SIGNUP]: () => import('./components/transporter/TransporterSignup'),
+  [ROUTES.TRANSPORTER_AVAILABLE_JOBS]: () => import('./components/transporter/AvailableJobs'),
+  [ROUTES.TRANSPORTER_MY_DELIVERIES]: () => import('./components/transporter/MyDeliveries'),
+  [ROUTES.TRANSPORTER_PROFILE]: () => import('./components/transporter/Profile')
 };
 
 // Navigation helpers
@@ -48,5 +58,5 @@ export const navigateTo = (route, params = {}) => {
 export const USER_TYPE_ROUTES = {
   producer: ROUTES.FARMER_SIGNIN,
   buyer: ROUTES.BUYER_DASHBOARD,
-  transporter: ROUTES.BUYER_DASHBOARD
+  transporter: ROUTES.TRANSPORTER_DASHBOARD
 };
