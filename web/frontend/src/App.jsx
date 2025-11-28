@@ -19,6 +19,13 @@ import Cart from './components/buyer/Cart'
 import MyOrders from './components/buyer/MyOrders'
 import Profile from './components/buyer/Profile'
 import { ROUTES, USER_TYPE_ROUTES } from './routes'
+import FarmerSignin from './farmer/FarmerSignin'
+import FarmerSignup from './farmer/FarmerSignup'
+import FarmerDashboard from './farmer/Dashboard'
+import FarmerAddProduct from './farmer/AddProduct'
+import FarmerMyProducts from './farmer/MyProducts'
+import FarmerOrders from './farmer/Orders'
+import FarmerProfile from './farmer/Profile'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -76,6 +83,27 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/orders" element={<MyOrders />} />
         <Route path="/profile" element={<Profile />} />
+
+        {/* Farmer Routes */}
+        <Route path="/farmer-signin" element={
+          <>
+            <Header />
+            <FarmerSignin />
+            <Footer />
+          </>
+        } />
+        <Route path="/farmer-signup" element={
+          <>
+            <Header />
+            <FarmerSignup />
+            <Footer />
+          </>
+        } />
+        <Route path="/farmer-dashboard" element={<FarmerDashboard />} />
+        <Route path="/farmer-add-product" element={<FarmerAddProduct />} />
+        <Route path="/farmer-my-products" element={<FarmerMyProducts />} />
+        <Route path="/farmer-orders" element={<FarmerOrders />} />
+        <Route path="/farmer-profile" element={<FarmerProfile />} />
 
         {/* Redirect unknown routes to home */}
         <Route path="*" element={<Navigate to="/" replace />} />

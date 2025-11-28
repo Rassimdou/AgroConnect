@@ -53,9 +53,10 @@ const UserTypeSelection = () => {
     setTimeout(() => {
       if (typeId === 'buyer') {
         navigate('/login');
-      } else {
-        // For other user types, go directly to dashboard (can be expanded later)
-        navigate('/dashboard');
+      } else if (typeId === 'producer') {
+        navigate('/farmer-signin');
+      } else if (typeId === 'transporter') {
+        navigate('/login'); // For now, transporters use buyer login
       }
     }, 500);
   };

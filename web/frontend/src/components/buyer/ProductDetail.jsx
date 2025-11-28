@@ -35,6 +35,11 @@ const productData = {
 const ProductDetail = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [chatMessages, setChatMessages] = useState([
+    { id: 1, sender: 'producer', message: 'Hello! I\'m happy to help you with any questions about our fresh tomatoes.', timestamp: new Date() }
+  ]);
+  const [newMessage, setNewMessage] = useState('');
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -58,6 +63,45 @@ const ProductDetail = () => {
 
   const handleAddToCart = () => {
     alert(`Added ${quantity}kg of ${product.name} to cart!`);
+  };
+
+  const handleSendMessage = () => {
+    if (newMessage.trim()) {
+      const message = {
+        id: chatMessages.length + 1,
+        sender: 'buyer',
+        message: newMessage.trim(),
+        timestamp: new Date()
+      };
+      setChatMessages([...chatMessages, message]);
+      setNewMessage('');
+
+      // Simulate producer response after 2 seconds
+      setTimeout(() => {
+        const responses = [
+          "Thank you for your interest! Our tomatoes are harvested fresh daily.",
+          "I'd be happy to arrange delivery for you. What quantity are you interested in?",
+          "We can provide bulk discounts for larger orders. Would you like to discuss pricing?",
+          "Our farm uses sustainable practices - no pesticides, just natural growth.",
+          "I can send you photos of our current crop if you'd like to see the quality."
+        ];
+        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+        const producerMessage = {
+          id: chatMessages.length + 2,
+          sender: 'producer',
+          message: randomResponse,
+          timestamp: new Date()
+        };
+        setChatMessages(prev => [...prev, producerMessage]);
+      }, 2000);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
   };
 
   return (
@@ -153,13 +197,25 @@ const ProductDetail = () => {
               </div>
             </div>
 
-            {/* Add to Cart Button */}
-            <button
-              onClick={handleAddToCart}
-              className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-6 rounded-lg text-lg transition-colors duration-200 shadow-lg hover:shadow-xl cursor-pointer"
-            >
-              Add to Cart - {product.price * quantity} DZD
-            </button>
+            {/* Action Buttons */}
+            <div className="flex gap-4">
+              <button
+                onClick={handleAddToCart}
+                className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-6 rounded-lg text-lg transition-colors duration-200 shadow-lg hover:shadow-xl cursor-pointer"
+              >
+                Add to Cart - {product.price * quantity} DZD
+              </button>
+
+              <button
+                onClick={() => setIsChatOpen(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-lg text-lg transition-colors duration-200 shadow-lg hover:shadow-xl cursor-pointer flex items-center justify-center gap-2"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                </svg>
+                Chat with {product.supplier}
+              </button>
+            </div>
 
             {/* Product Description */}
             <div className="bg-white rounded-lg p-6 shadow-sm">
@@ -274,6 +330,83 @@ const ProductDetail = () => {
       </div>
       </div>
       <Footer />
+
+      {/* Chat Modal */}
+      {isChatOpen && (
+        <div className="fixed inset-0 bg-black/70 bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg h-[600px] flex flex-col transform transition-all duration-300 scale-100 opacity-100">
+            {/* Chat Header */}
+            <div className="bg-linear-to-r from-green-600 to-green-700 text-white p-4 rounded-t-2xl flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                  <span className="text-lg">👨‍🌾</span>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-lg">{product.supplier}</h3>
+                  <p className="text-sm text-green-100">Online now</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsChatOpen(false)}
+                className="text-white hover:text-green-200 transition-colors duration-200 p-2 hover:bg-white hover:bg-opacity-10 rounded-lg"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </button>
+            </div>
+
+            {/* Chat Messages */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+              {chatMessages.map((msg) => (
+                <div
+                  key={msg.id}
+                  className={`flex ${msg.sender === 'buyer' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div
+                    className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl ${
+                      msg.sender === 'buyer'
+                        ? 'bg-green-600 text-white rounded-br-sm'
+                        : 'bg-white text-gray-800 rounded-bl-sm shadow-sm'
+                    }`}
+                  >
+                    <p className="text-sm">{msg.message}</p>
+                    <p className={`text-xs mt-1 ${msg.sender === 'buyer' ? 'text-green-100' : 'text-gray-500'}`}>
+                      {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Chat Input */}
+            <div className="p-4 bg-white border-t border-gray-200 rounded-b-2xl">
+              <div className="flex space-x-2">
+                <input
+                  type="text"
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Type your message..."
+                  className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                />
+                <button
+                  onClick={handleSendMessage}
+                  disabled={!newMessage.trim()}
+                  className="bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-6 py-3 rounded-xl transition-colors duration-200 flex items-center justify-center disabled:cursor-not-allowed"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                  </svg>
+                </button>
+              </div>
+              <p className="text-xs text-gray-500 mt-2 text-center">
+                💬 Chat with the producer directly. Your conversation is private and secure.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
