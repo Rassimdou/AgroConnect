@@ -70,17 +70,23 @@ const deliveries = [
 const MyDeliveries = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [filter, setFilter] = useState('all');
+  const [transporterProfile, setTransporterProfile] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     setIsVisible(true);
+    // Get transporter profile from localStorage
+    const stored = localStorage.getItem('transporterProfile');
+    if (stored) {
+      setTransporterProfile(JSON.parse(stored));
+    }
   }, []);
 
   const getStatusColor = (status) => {
     switch (status) {
       case 'Delivered': return 'text-green-600 bg-green-100 border-green-200';
-      case 'In Transit': return 'text-blue-600 bg-blue-100 border-blue-200';
-      case 'Picked Up': return 'text-orange-600 bg-orange-100 border-orange-200';
+      case 'In Transit': return 'text-green-600 bg-green-100 border-green-200';
+      case 'Picked Up': return 'text-green-600 bg-green-100 border-green-200';
       case 'Pending': return 'text-gray-600 bg-gray-100 border-gray-200';
       default: return 'text-gray-600 bg-gray-100 border-gray-200';
     }
@@ -100,9 +106,44 @@ const MyDeliveries = () => {
   return (
     <>
       <Header isTransporterMode={true} />
-      <div className="pt-20 min-h-screen bg-gradient-to-br from-slate-50 via-orange-50/30 to-red-50/20">
+      <div className="pt-20 min-h-screen bg-gray-50">
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Transporter Profile Card */}
+        {transporterProfile && (
+          <div className={`mb-8 transform transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-200 shadow-lg">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-600 mb-1">Transporter Name</h3>
+                  <p className="text-2xl font-bold text-gray-900">{transporterProfile.name}</p>
+                  <p className="text-gray-600 mt-1">{transporterProfile.email}</p>
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-600 mb-1">Vehicle Information</h3>
+                  <p className="text-lg font-semibold text-gray-900">{transporterProfile.vehicleType}</p>
+                  <p className="text-sm text-gray-600">{transporterProfile.vehicleModel} ({transporterProfile.vehicleYear})</p>
+                  <p className="text-sm text-gray-600">Plate: {transporterProfile.licensePlate} • Capacity: {transporterProfile.capacity}</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 pt-4 border-t border-gray-200">
+                <div>
+                  <p className="text-xs text-gray-600">Phone</p>
+                  <p className="font-semibold text-gray-900">{transporterProfile.phone}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-600">Location</p>
+                  <p className="font-semibold text-gray-900">{transporterProfile.location}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-600">Type</p>
+                  <p className="font-semibold text-gray-900 capitalize">{transporterProfile.transporterType}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Header */}
         <div className={`mb-8 transform transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
           <div className="text-center">
@@ -120,8 +161,8 @@ const MyDeliveries = () => {
               onClick={() => setFilter('all')}
               className={`px-6 py-2 rounded-full font-semibold transition-all duration-300 ${
                 filter === 'all'
-                  ? 'bg-orange-600 text-white shadow-lg'
-                  : 'bg-white text-gray-700 hover:bg-orange-50 border border-gray-200'
+                  ? 'bg-green-600 text-white shadow-md'
+                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
               }`}
             >
               All Deliveries ({deliveries.length})
@@ -130,8 +171,8 @@ const MyDeliveries = () => {
               onClick={() => setFilter('intransit')}
               className={`px-6 py-2 rounded-full font-semibold transition-all duration-300 ${
                 filter === 'intransit'
-                  ? 'bg-blue-600 text-white shadow-lg'
-                  : 'bg-white text-gray-700 hover:bg-blue-50 border border-gray-200'
+                  ? 'bg-green-600 text-white shadow-md'
+                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
               }`}
             >
               In Transit ({deliveries.filter(d => d.status === 'In Transit').length})
@@ -140,8 +181,8 @@ const MyDeliveries = () => {
               onClick={() => setFilter('pickedup')}
               className={`px-6 py-2 rounded-full font-semibold transition-all duration-300 ${
                 filter === 'pickedup'
-                  ? 'bg-orange-600 text-white shadow-lg'
-                  : 'bg-white text-gray-700 hover:bg-orange-50 border border-gray-200'
+                  ? 'bg-green-600 text-white shadow-md'
+                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
               }`}
             >
               Picked Up ({deliveries.filter(d => d.status === 'Picked Up').length})
@@ -150,8 +191,8 @@ const MyDeliveries = () => {
               onClick={() => setFilter('delivered')}
               className={`px-6 py-2 rounded-full font-semibold transition-all duration-300 ${
                 filter === 'delivered'
-                  ? 'bg-green-600 text-white shadow-lg'
-                  : 'bg-white text-gray-700 hover:bg-green-50 border border-gray-200'
+                  ? 'bg-green-600 text-white shadow-md'
+                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
               }`}
             >
               Delivered ({deliveries.filter(d => d.status === 'Delivered').length})
@@ -164,14 +205,14 @@ const MyDeliveries = () => {
           {filteredDeliveries.map((delivery, index) => (
             <div
               key={delivery.id}
-              className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-orange-200 overflow-hidden"
+              className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200 overflow-hidden"
               style={{animationDelay: `${500 + index * 100}ms`}}
             >
               {/* Delivery Header */}
               <div className="p-6 border-b border-gray-100">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center space-x-4">
-                    <div className="w-14 h-14 bg-gradient-to-br from-orange-100 to-red-200 rounded-xl flex items-center justify-center text-2xl shadow-lg">
+                    <div className="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center text-2xl shadow-sm">
                       🚛
                     </div>
                     <div>
@@ -221,7 +262,7 @@ const MyDeliveries = () => {
                   {delivery.status === 'Picked Up' && (
                     <button
                       onClick={() => handleUpdateStatus(delivery.id, 'In Transit')}
-                      className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
+                      className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 shadow-sm hover:shadow-md"
                     >
                       Mark as In Transit
                     </button>
@@ -229,18 +270,18 @@ const MyDeliveries = () => {
                   {delivery.status === 'In Transit' && (
                     <button
                       onClick={() => handleUpdateStatus(delivery.id, 'Delivered')}
-                      className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
+                      className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 shadow-sm hover:shadow-md"
                     >
                       Mark as Delivered
                     </button>
                   )}
                   <button
                     onClick={() => handleContactClient(delivery.clientPhone)}
-                    className="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 shadow-sm hover:shadow-md"
                   >
                     📞 Contact Client
                   </button>
-                  <button className="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg">
+                  <button className="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 shadow-sm hover:shadow-md">
                     📍 Track Location
                   </button>
                 </div>

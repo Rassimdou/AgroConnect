@@ -110,34 +110,34 @@ const Header = ({ isBuyerMode = false, isFarmerMode = false, isTransporterMode =
           ) : isTransporterMode ? (
             // Transporter Navigation
             <>
-              <button onClick={() => handleNavigation('/transporter-dashboard')} className="flex items-center space-x-1 relative group hover:text-orange-600 transition-all duration-300 font-medium">
+              <button onClick={() => handleNavigation('/transporter-dashboard')} className="flex items-center space-x-1 relative group hover:text-green-600 transition-all duration-300 font-medium">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2 2z"></path>
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z"></path>
                 </svg>
-                <span>Dashboard</span>
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-orange-600 group-hover:w-full transition-all duration-300"></span>
+                <span>signe out</span>
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 group-hover:w-full transition-all duration-300"></span>
               </button>
-              <button onClick={() => handleNavigation('/transporter-available-jobs')} className="flex items-center space-x-1 relative group hover:text-orange-600 transition-all duration-300 font-medium">
+              <button onClick={() => handleNavigation('/transporter-available-jobs')} className="flex items-center space-x-1 relative group hover:text-green-600 transition-all duration-300 font-medium">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
                 <span>Available Jobs</span>
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-orange-600 group-hover:w-full transition-all duration-300"></span>
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 group-hover:w-full transition-all duration-300"></span>
               </button>
-              <button onClick={() => handleNavigation('/transporter-my-deliveries')} className="flex items-center space-x-1 relative group hover:text-orange-600 transition-all duration-300 font-medium">
+              <button onClick={() => handleNavigation('/transporter-my-deliveries')} className="flex items-center space-x-1 relative group hover:text-green-600 transition-all duration-300 font-medium">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V7M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path>
                 </svg>
                 <span>My Deliveries</span>
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-orange-600 group-hover:w-full transition-all duration-300"></span>
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 group-hover:w-full transition-all duration-300"></span>
               </button>
-              <button onClick={() => handleNavigation('/transporter-profile')} className="flex items-center space-x-1 relative group hover:text-orange-600 transition-all duration-300 font-medium">
+              <button onClick={() => handleNavigation('/transporter-profile')} className="flex items-center space-x-1 relative group hover:text-green-600 transition-all duration-300 font-medium">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                 </svg>
                 <span>Profile</span>
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-orange-600 group-hover:w-full transition-all duration-300"></span>
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 group-hover:w-full transition-all duration-300"></span>
               </button>
             </>
           ) : (
