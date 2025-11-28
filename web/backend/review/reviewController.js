@@ -37,7 +37,10 @@ export const giveReview = async (req, res) => {
         reviewSummary[0].total_reviews = reviewSummary[0].total_reviews + 1;
         reviewSummary[0].average_score = reviewSummary[0].total_score_sum / reviewSummary[0].total_reviews;
 
-        const [rows] = await connection.promise().query("INSER INTO review_summaries WHERE target_id = ? AND target_type = ? SET ?", reviewSummary);
+        const [rows] = await connection.promise().query(
+            "UPDATE review_summaries SET total_score_sum = ?, total_reviews = ?, average_score = ? WHERE target_id = ? AND target_type = ?",
+            [reviewSummary[0].total_score_sum, reviewSummary[0].total_reviews, reviewSummary[0].average_score, target_id, target_type]
+        );
         await connection.end();
 
     } catch (error) {

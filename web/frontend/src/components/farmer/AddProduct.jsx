@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../header";
 import Footer from "../footer";
+import api from "../../services/api";
 
 const AddProduct = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -12,19 +13,12 @@ const AddProduct = () => {
 
   const [formData, setFormData] = useState({
     productName: "",
-    productType: "vegetable",
     category: "",
     description: "",
     price: "",
-    unit: "kg",
     quantity: "",
     minOrder: "1",
-    availability: true,
-    images: [],
-    harvestDate: "",
-    organic: false,
-    certifications: "",
-    location: "",
+    images: [], // Stores objects with { id, file, preview, base64 }
   });
 
   useEffect(() => {
@@ -32,20 +26,36 @@ const AddProduct = () => {
   }, []);
 
   const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: value,
     }));
   };
 
-  const handleImageUpload = (e) => {
+  const convertFileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
+  const handleImageUpload = async (e) => {
     const files = Array.from(e.target.files);
-    const newImages = files.map((file) => ({
-      id: Math.random().toString(36).substr(2, 9),
-      file,
-      preview: URL.createObjectURL(file),
-    }));
+
+    const newImagesPromises = files.map(async (file) => {
+      const base64 = await convertFileToBase64(file);
+      return {
+        id: Math.random().toString(36).substr(2, 9),
+        file,
+        preview: URL.createObjectURL(file),
+        base64: base64 // Store base64 string for API
+      };
+    });
+
+    const newImages = await Promise.all(newImagesPromises);
 
     setFormData((prev) => ({
       ...prev,
@@ -80,89 +90,61 @@ const AddProduct = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate API call
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      console.log("Product data:", formData);
+      // Create FormData for multipart/form-data upload
+      const formDataToSend = new FormData();
+      formDataToSend.append('name', formData.productName);
+      formDataToSend.append('category', formData.category);
+      formDataToSend.append('description', formData.description);
+      formDataToSend.append('price', formData.price);
+      formDataToSend.append('quantity_available', formData.quantity);
+      formDataToSend.append('minimum_order_amount', formData.minOrder);
+
+      // Append image files
+      formData.images.forEach((image) => {
+        formDataToSend.append('images', image.file);
+      });
+
+      const response = await api.post('/market/createProduct', formDataToSend, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      console.log("Product created:", response.data);
       setShowSuccess(true);
 
       // Reset form after success
       setTimeout(() => {
         setFormData({
           productName: "",
-          productType: "vegetable",
           category: "",
           description: "",
           price: "",
-          unit: "kg",
           quantity: "",
           minOrder: "1",
-          availability: true,
           images: [],
-          harvestDate: "",
-          organic: false,
-          certifications: "",
-          location: "",
         });
         setShowSuccess(false);
         setIsLoading(false);
-      }, 3000);
+        navigate('/farmer-my-products'); // Navigate to products list
+      }, 2000);
     } catch (error) {
       console.error("Error submitting product:", error);
+      alert(error.response?.data?.message || "Failed to create product. Please try again.");
       setIsLoading(false);
     }
   };
 
-  const productTypes = [
-    { value: "vegetable", label: "🥦 Vegetable" },
-    { value: "fruit", label: "🍎 Fruit" },
-    { value: "grain", label: "🌾 Grain" },
-    { value: "herb", label: "🌿 Herb" },
-    { value: "dairy", label: "🥛 Dairy" },
-    { value: "poultry", label: "🐔 Poultry" },
+  const categories = [
+    "Tomatoes", "Potatoes", "Lettuce", "Carrots", "Onions", "Peppers", "Cucumbers",
+    "Apples", "Oranges", "Bananas", "Grapes", "Berries", "Melons", "Citrus",
+    "Wheat", "Rice", "Corn", "Barley", "Oats", "Quinoa",
+    "Basil", "Mint", "Parsley", "Cilantro", "Rosemary", "Thyme",
+    "Milk", "Cheese", "Yogurt", "Butter", "Cream",
+    "Eggs", "Chicken", "Turkey", "Duck",
+    "Other"
   ];
-
-  const units = [
-    { value: "kg", label: "Kilogram (kg)" },
-    { value: "t", label: "ton" },
-    { value: "piece", label: "Piece" },
-    { value: "bunch", label: "Bunch" },
-  ];
-
-  const categories = {
-    vegetable: [
-      "Tomatoes",
-      "Potatoes",
-      "Lettuce",
-      "Carrots",
-      "Onions",
-      "Peppers",
-      "Cucumbers",
-      "Other",
-    ],
-    fruit: [
-      "Apples",
-      "Oranges",
-      "Bananas",
-      "Grapes",
-      "Berries",
-      "Melons",
-      "Citrus",
-      "Other",
-    ],
-    grain: ["Wheat", "Rice", "Corn", "Barley", "Oats", "Quinoa", "Other"],
-    herb: [
-      "Basil",
-      "Mint",
-      "Parsley",
-      "Cilantro",
-      "Rosemary",
-      "Thyme",
-      "Other",
-    ],
-    dairy: ["Milk", "Cheese", "Yogurt", "Butter", "Cream", "Other"],
-    poultry: ["Eggs", "Chicken", "Turkey", "Duck", "Other"],
-  };
 
   return (
     <>
@@ -234,25 +216,6 @@ const AddProduct = () => {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Product Type <span className="text-red-500">*</span>
-                      </label>
-                      <select
-                        name="productType"
-                        value={formData.productType}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                        required
-                      >
-                        {productTypes.map((type) => (
-                          <option key={type.value} value={type.value}>
-                            {type.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
                         Category <span className="text-red-500">*</span>
                       </label>
                       <select
@@ -263,23 +226,12 @@ const AddProduct = () => {
                         required
                       >
                         <option value="">Select a category</option>
-                        {categories[formData.productType]?.map((category) => (
+                        {categories.map((category) => (
                           <option key={category} value={category}>
                             {category}
                           </option>
                         ))}
                       </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Harvest Date</label>
-                      <input
-                        type="date"
-                        name="harvestDate"
-                        value={formData.harvestDate}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                      />
                     </div>
                   </div>
 
@@ -308,7 +260,7 @@ const AddProduct = () => {
                     Pricing & Quantity
                   </h2>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Price <span className="text-red-500">*</span>
@@ -331,26 +283,7 @@ const AddProduct = () => {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Unit <span className="text-red-500">*</span>
-                      </label>
-                      <select
-                        name="unit"
-                        value={formData.unit}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                        required
-                      >
-                        {units.map((unit) => (
-                          <option key={unit.value} value={unit.value}>
-                            {unit.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Available Quantity <span className="text-red-500">*</span>
+                        Quantity Available <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="number"
@@ -382,14 +315,17 @@ const AddProduct = () => {
                 <div className="section-divider"></div>
 
                 {/* Product Images */}
-                <div className="form-section">
-                  <h2 className="section-title">
-                    <span>🖼️</span>
+                <div className="mb-8">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                    <span className="text-2xl mr-3">🖼️</span>
                     Product Images
                   </h2>
 
                   <div
-                    className={`upload-area ${isDragOver ? "drag-over" : ""}`}
+                    className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all duration-300 group ${isDragOver
+                      ? "border-green-500 bg-green-50/50 scale-[1.01]"
+                      : "border-gray-300 hover:border-green-500 hover:bg-green-50/30"
+                      }`}
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
                     onDrop={handleDrop}
@@ -397,15 +333,15 @@ const AddProduct = () => {
                       document.getElementById("image-upload").click()
                     }
                   >
-                    <div className="upload-icon">📸</div>
-                    <div className="upload-text">Upload Product Images</div>
-                    <div className="upload-subtext">
+                    <div className="text-5xl mb-4 transform group-hover:scale-110 transition-transform duration-300">📸</div>
+                    <div className="text-xl font-semibold text-gray-800 mb-2">Upload Product Images</div>
+                    <div className="text-gray-500 mb-1">
                       Drag & drop images here or click to browse
                     </div>
-                    <div className="upload-subtext">
+                    <div className="text-sm text-gray-400">
                       Supports JPG, PNG, WEBP (Max 5MB each)
                     </div>
-                    <button type="button" className="upload-button">
+                    <button type="button" className="mt-6 px-6 py-2.5 bg-white border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 shadow-sm">
                       Choose Files
                     </button>
                     <input
@@ -419,18 +355,21 @@ const AddProduct = () => {
                   </div>
 
                   {formData.images.length > 0 && (
-                    <div className="preview-grid">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
                       {formData.images.map((image) => (
-                        <div key={image.id} className="preview-item">
+                        <div key={image.id} className="relative group aspect-square rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300">
                           <img
                             src={image.preview}
                             alt="Preview"
-                            className="preview-image"
+                            className="w-full h-full object-cover"
                           />
                           <button
                             type="button"
-                            className="remove-image"
-                            onClick={() => handleRemoveImage(image.id)}
+                            className="absolute top-2 right-2 bg-white/90 text-red-500 w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-red-500 hover:text-white shadow-md backdrop-blur-sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleRemoveImage(image.id);
+                            }}
                           >
                             ×
                           </button>
@@ -438,88 +377,6 @@ const AddProduct = () => {
                       ))}
                     </div>
                   )}
-                </div>
-
-                <div className="section-divider"></div>
-
-                {/* Additional Information */}
-                <div className="form-section">
-                  <h2 className="section-title">
-                    <span>🔍</span>
-                    Additional Information
-                  </h2>
-
-                  <div className="form-grid">
-                    <div className="form-group">
-                      <label className="form-label">Location</label>
-                      <input
-                        type="text"
-                        name="location"
-                        value={formData.location}
-                        onChange={handleInputChange}
-                        className="form-input"
-                        placeholder="Farm location"
-                      />
-                    </div>
-
-                    <div className="form-group">
-                      <label className="form-label">Certifications</label>
-                      <input
-                        type="text"
-                        name="certifications"
-                        value={formData.certifications}
-                        onChange={handleInputChange}
-                        className="form-input"
-                        placeholder="e.g., Organic, ISO, etc."
-                      />
-                    </div>
-                  </div>
-
-                  <div className="form-grid full-width">
-                    <div
-                      className={`availability-toggle ${
-                        formData.availability ? "active" : ""
-                      }`}
-                      onClick={() =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          availability: !prev.availability,
-                        }))
-                      }
-                    >
-                      <div className="toggle-switch"></div>
-                      <div>
-                        <div className="toggle-label">Available for Sale</div>
-                        <div className="toggle-status">
-                          {formData.availability
-                            ? "Product is visible to buyers"
-                            : "Product is hidden from buyers"}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div
-                      className={`availability-toggle ${
-                        formData.organic ? "active" : ""
-                      }`}
-                      onClick={() =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          organic: !prev.organic,
-                        }))
-                      }
-                    >
-                      <div className="toggle-switch"></div>
-                      <div>
-                        <div className="toggle-label">Organic Product</div>
-                        <div className="toggle-status">
-                          {formData.organic
-                            ? "Certified organic farming"
-                            : "Conventional farming methods"}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </div>
 
                 {/* Form Actions */}

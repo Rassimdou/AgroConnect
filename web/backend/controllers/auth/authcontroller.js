@@ -265,8 +265,22 @@ export const getuserProfile = (req, res) => {
 
 };
 
-export const getproducerProfile = (req, res) => {
-    res.json({ producer: req.producer });
+export const getproducerProfile = async (req, res) => {
+    try {
+        const producerId = req.params.id || req.user.id;
+        const connection = await getConnection();
+        const [producers] = await connection.promise().query("SELECT * FROM producers WHERE id = ?", [producerId]);
+        if (producers.length === 0) {
+            return res.status(401).json({ error: "producer not found please sign in" });
+        }
+        const producer = producers[0];
+        console.log("Producer logged in successfully.");
+        connection.end();
+        return res.status(200).json({ producer });
+    } catch (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({ error: "Internal server error." });
+    }
 };
 export const gettransporterProfile = (req, res) => {
     res.json({ transporter: req.transporter });

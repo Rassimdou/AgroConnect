@@ -553,13 +553,14 @@ const Marketplace = () => {
                   {filteredProducts.map((product, index) => (
                     <div
                       key={product.id}
+                      onClick={() => navigate(`/product/${product.id}`)}
                       className="bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden cursor-pointer group border border-gray-100 hover:border-green-200 transform hover:scale-105"
                       style={{ animationDelay: `${index * 100}ms` }}
                     >
                       {/* Product Image */}
                       <div className="relative h-48 bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 flex items-center justify-center overflow-hidden">
                         <div className="absolute inset-0 bg-gradient-to-br from-green-100/20 to-blue-100/20 animate-pulse"></div>
-                        <span className="text-7xl relative z-10 group-hover:scale-110 transition-transform duration-500">{product.image}</span>
+                        <img src={"http://localhost:3000" + product.image} alt={product.name} className="w-full h-full object-cover" />
 
                         {/* Quality Badge */}
                         <div className={`absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-bold text-white shadow-lg ${getQualityScoreColor(product.qualityScore)}`}>
@@ -641,20 +642,6 @@ const Marketplace = () => {
                           </div>
                           <span className="text-sm text-gray-600">(4.8)</span>
                         </div>
-
-                        {/* Contact Seller Button */}
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleContactSeller(product);
-                          }}
-                          className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center"
-                        >
-                          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-                          </svg>
-                          Contact Seller
-                        </button>
                       </div>
                     </div>
                   ))}

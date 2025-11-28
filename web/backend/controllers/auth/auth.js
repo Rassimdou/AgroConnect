@@ -13,6 +13,7 @@ router.post('/login/producer', authController.loginproducers);
 router.post('/login/transporter', authController.logintransporters);
 router.post('/verify/otp', authController.verifyOTP);
 router.get('/profile/user', authenticateToken, checkRole('user'), authController.getuserProfile);
+router.get('/profile/producer/:id', authenticateToken, authController.getproducerProfile);
 router.get('/profile/producer', authenticateToken, checkRole('producer'), authController.getproducerProfile);
 router.get('/profile/transporter', authenticateToken, checkRole('transporter'), authController.gettransporterProfile);
 

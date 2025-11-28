@@ -61,10 +61,9 @@ const FarmerSignin = ({ onNavigate }) => {
     setErrors({});
 
     try {
-      // Simulate API call - then go directly to dashboard
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      const res = await api.post('auth/login/producer', formData);
+      console.log(res.data);
 
-      // Navigate directly to dashboard without verification
       if (onNavigate) {
         onNavigate('dashboard');
       } else {
@@ -78,17 +77,8 @@ const FarmerSignin = ({ onNavigate }) => {
   };
 
   const handleSignup = () => {
-    try {
-      const res = api.post('/auth/login/producer', {
-        email: formData.email,
-        password: formData.password
-      });
-      console.log(res);
-      navigate('/farmer-signup');
 
-    } catch (error) {
-      console.log(error);
-    }
+    navigate('/farmer-signup');
   };
 
   const handleForgotPassword = () => {
