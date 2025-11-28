@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const UserTypeSelection = ({ onBack }) => {
+const UserTypeSelection = () => {
+  const navigate = useNavigate();
   const [selectedType, setSelectedType] = useState(null);
 
   const userTypes = [
@@ -28,7 +30,7 @@ const UserTypeSelection = ({ onBack }) => {
         </svg>
       ),
       features: ['Browse Products', 'Compare Prices', 'Verified Suppliers', 'Bulk Ordering'],
-      color: 'blue'
+      color: 'green'
     },
     {
       id: 'transporter',
@@ -41,14 +43,21 @@ const UserTypeSelection = ({ onBack }) => {
         </svg>
       ),
       features: ['Route Optimization', 'Real-time Tracking', 'Capacity Management', 'Multi-wilaya Coverage'],
-      color: 'purple'
+      color: 'green'
     }
   ];
 
   const handleSelect = (typeId) => {
     setSelectedType(typeId);
-    // Here you would typically navigate to registration or dashboard
-    alert(`Selected: ${typeId}. Registration flow would start here.`);
+    // Small delay to show selection animation
+    setTimeout(() => {
+      if (typeId === 'buyer') {
+        navigate('/login');
+      } else {
+        // For other user types, go directly to dashboard (can be expanded later)
+        navigate('/dashboard');
+      }
+    }, 500);
   };
 
   const getColorClasses = (color) => {
@@ -61,7 +70,7 @@ const UserTypeSelection = ({ onBack }) => {
         button: 'bg-green-600 hover:bg-green-700'
       },
       blue: {
-        bg: 'bg-blue-50',
+        bg: 'bg-green-50',
         border: 'border-blue-200',
         hover: 'hover:border-blue-400 hover:bg-blue-100',
         icon: 'text-blue-600',
@@ -83,15 +92,7 @@ const UserTypeSelection = ({ onBack }) => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <button
-            onClick={onBack}
-            className="mb-8 inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 cursor-pointer"
-          >
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path>
-            </svg>
-            Back to Home
-          </button>
+          
 
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             Join <span className="text-green-600">AgroConnect DZ</span>
@@ -151,9 +152,15 @@ const UserTypeSelection = ({ onBack }) => {
 
                   {/* CTA Button */}
                   <button
-                    className={`w-full py-4 px-6 rounded-xl text-white font-semibold text-lg transform transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl ${colors.button} cursor-pointer`}
+                    onClick={() => handleSelect(type.id)}
+                    disabled={selectedType === type.id}
+                    className={`w-full py-4 px-6 rounded-xl text-white font-semibold text-lg transform transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer ${
+                      selectedType === type.id
+                        ? 'bg-green-600 hover:bg-green-700 animate-pulse'
+                        : `${colors.button} hover:scale-105`
+                    }`}
                   >
-                    {isSelected ? 'Continue as ' + type.title : 'Select ' + type.title}
+                    {selectedType === type.id ? `Continue as ${type.title}` : `Select ${type.title}`}
                   </button>
                 </div>
 

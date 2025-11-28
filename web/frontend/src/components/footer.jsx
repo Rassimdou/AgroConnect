@@ -1,13 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 const Footer = () => {
-  const [isVisible, setIsVisible] = useState(false);
   const [email, setEmail] = useState('');
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsVisible(true), 500);
-    return () => clearTimeout(timer);
-  }, []);
 
   const handleSubscribe = (e) => {
     e.preventDefault();
@@ -21,7 +15,7 @@ const Footer = () => {
   };
 
   return (
-    <footer className={`bg-linear-to-br from-gray-50 to-white text-gray-700 relative overflow-hidden transform transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+    <footer className="bg-linear-to-br from-gray-50 to-white text-gray-700 relative overflow-hidden">
       {/* Animated Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute top-10 left-10 w-20 h-20 bg-green-300 rounded-full animate-bounce"></div>
