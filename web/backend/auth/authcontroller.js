@@ -18,12 +18,15 @@ export const registernewUser = async (req, res) => {
     if (!username || !email || !password) {
         console.error("Validation error: Missing fields.");
         return res.status(400).json({ error: "All fields are required." });
+        console.log("Registration attempt with missing fields.");
+        console.log("Request body:", req.body);
     }
 
     try {
         const connection = await getConnection();
         console.log("Connected to the database successfully.");
 
+        console.log("GG");
 
         const [existingUsers] = await connection.promise().query(
             "SELECT * FROM users WHERE email = ? OR username = ?",
