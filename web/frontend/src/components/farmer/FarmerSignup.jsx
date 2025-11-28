@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import api from '../../services/api';
 
 const FarmerSignup = ({ onNavigate }) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -15,6 +17,7 @@ const FarmerSignup = ({ onNavigate }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     setIsVisible(true);
@@ -100,15 +103,30 @@ const FarmerSignup = ({ onNavigate }) => {
     setErrors({});
 
     try {
-      // Simulate API call, then go directly to dashboard
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      
-      // Navigate directly to dashboard without verification
-      if (onNavigate) {
-        onNavigate('dashboard');
+      // Send API request to register farmer
+      const { data } = await api.post('/auth/register/producer', {
+        fullname: formData.fullName,
+        email: formData.email,
+        password: formData.password,
+        phone_number: formData.phone,
+        location: formData.location,
+        domain: formData.domain
+      });
+      const userId = data.userId;
+      console.log(userId);
+      if (!userId) {
+        throw new Error('Missing user ID from server response.');
       }
+
+
+      console.log('Registration successful:', data);
+      navigate(
+        `/verify-otp?user_id=${encodeURIComponent(userId)}&user_fullname=${encodeURIComponent(formData.fullName)}&user_role=producer`
+      );
     } catch (error) {
-      setErrors({ submit: error.message || 'Registration failed. Please try again.' });
+      console.error('Registration error:', error);
+      const errorMessage = error.response?.data?.message || error.message || 'Registration failed. Please try again.';
+      setErrors({ submit: errorMessage });
     } finally {
       setIsLoading(false);
     }
@@ -116,14 +134,14 @@ const FarmerSignup = ({ onNavigate }) => {
 
   const handleLogin = () => {
     if (onNavigate) {
-      onNavigate('login');
+      onNavigate('/farmer-signin');
     }
   };
 
   return (
     <div className="pt-20 min-h-screen bg-gradient-to-br from-gray-50 to-white flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className={`max-w-md w-full space-y-8 transform transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-        
+
         {/* Header */}
         <div className="text-center">
           <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 transform hover:rotate-12 transition-transform duration-300">

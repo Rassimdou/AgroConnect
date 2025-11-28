@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import api from '../../services/api';
 
 const FarmerSignin = ({ onNavigate }) => {
   const navigate = useNavigate();
@@ -62,7 +63,7 @@ const FarmerSignin = ({ onNavigate }) => {
     try {
       // Simulate API call - then go directly to dashboard
       await new Promise((resolve) => setTimeout(resolve, 500));
-      
+
       // Navigate directly to dashboard without verification
       if (onNavigate) {
         onNavigate('dashboard');
@@ -77,7 +78,17 @@ const FarmerSignin = ({ onNavigate }) => {
   };
 
   const handleSignup = () => {
-    navigate('/farmer-signup');
+    try {
+      const res = api.post('/auth/login/producer', {
+        email: formData.email,
+        password: formData.password
+      });
+      console.log(res);
+      navigate('/farmer-signup');
+
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleForgotPassword = () => {
