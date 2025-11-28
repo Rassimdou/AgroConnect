@@ -3,10 +3,8 @@ import prisma from '../prisma/client.js';
 
 
 export const createProduct = async (req, res) => {
-    
-        const producerId = req.user ? parseInt(req.user.id) : 1; 
-    
-    const { name, category, description, quantity_available , price} = req.body;
+    const producerId = req.user ? parseInt(req.user.id) : 1;
+    const { name, images, category, description, quantity_available, price } = req.body;
 
     if (!name || !category || !description || price === undefined) {
         return res.status(400).json({ message: "All required fields must be provided." });
@@ -15,24 +13,31 @@ export const createProduct = async (req, res) => {
     try {
         const newProduct = await prisma.product.create({
             data: {
-               producer_id: producerId,
-                name: name,
-                category: category,
-                description: description,
-                quantity_available: parseInt(quantity_available), 
+                producer_id: producerId,
+                name,
+                category,
+                description,
+                quantity_available: parseInt(quantity_available),
                 price: parseFloat(price),
+                minimum_order_amount: 1,
+                state: 'pending_ai',
+                images: images && images.length > 0 ? {
+                    create: images.map((imageUrl) => ({ image_url: imageUrl })),
+                } : undefined,
             },
+            include: { images: true }, 
         });
-        
-        res.status(201).json({ 
-            message: "Product successfully published for review.", 
-            product: newProduct 
+
+        res.status(201).json({
+            message: "Product successfully published for review.",
+            product: newProduct
         });
     } catch (error) {
         console.error("Prisma Error:", error);
         res.status(500).json({ message: "Error publishing product.", error: error.message });
     }
 };
+
 
 
 export const getProductById = async (req, res) => {
