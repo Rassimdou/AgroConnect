@@ -12,6 +12,23 @@ const transporter = nodemailer.createTransport({
     }
 });
 
+const isProduction = process.env.NODE_ENV === 'production';
+const authCookieOptions = {
+    httpOnly: true,
+    sameSite: "none",
+    secure: false,
+};
+
+const clearCookieOptions = {
+    sameSite: isProduction ? 'none' : 'lax',
+    secure: isProduction,
+    path: '/',
+};
+
+const setAuthCookie = (res, token) => {
+    res.cookie('token', token, authCookieOptions);
+};
+
 export const registernewUser = async (req, res) => {
     const { fullname, email, password, phone_number } = req.body;
 
@@ -165,7 +182,8 @@ export const loginUsers = async (req, res) => {
         }
         console.log("User logged in successfully.");
         const token = jwt.sign({ id: user.id, fullname: user.fullname, role: "user", verified: user.verified_status }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
-        res.cookie('token', token, { httpOnly: true });
+        console.log(token);
+        setAuthCookie(res, token);
         await connection.end();
         return res.status(200).json({ message: "Login successful." });
     } catch (err) {
@@ -198,7 +216,7 @@ export const loginproducers = async (req, res) => {
         }
         console.log("Producer logged in successfully.");
         const token = jwt.sign({ id: producer.id, fullname: producer.fullname, role: "producer", verified: producer.verified_status }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
-        res.cookie('token', token, { httpOnly: true });
+        setAuthCookie(res, token);
         await connection.end();
         return res.status(200).json({ message: "Login successful." });
     } catch (err) {
@@ -230,7 +248,7 @@ export const logintransporters = async (req, res) => {
         }
         console.log("Transporter logged in successfully.");
         const token = jwt.sign({ id: transporter.id, fullname: transporter.fullname, role: "transporter", verified: transporter.verified_status }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
-        res.cookie('token', token, { httpOnly: true });
+        setAuthCookie(res, token);
         await connection.end();
         return res.status(200).json({ message: "Login successful." });
     } catch (err) {
@@ -255,7 +273,7 @@ export const gettransporterProfile = (req, res) => {
 };
 
 export const logout = (req, res) => {
-    res.clearCookie('token');
+    res.clearCookie('token', clearCookieOptions);
     res.status(200).json({ message: "Logout successful." });
 };
 
@@ -299,7 +317,7 @@ export const verifyOTP = async (req, res) => {
                     await connection.end();
                     const [id, fullname] = [user_id, user_fullname,];
                     const token = jwt.sign({ id, fullname, role: user_role, verified: "verified" }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
-                    res.cookie('token', token, { httpOnly: true });
+                    setAuthCookie(res, token);
                     return res.status(200).json({ message: "Email verified successfully." });
                 }
             }

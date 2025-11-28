@@ -50,10 +50,10 @@ const Profile = () => {
 
         setUser((prev) => ({
           ...prev,
-          id: res.data.id ?? prev.id,
-          name: res.data.fullname ?? prev.name,
-          role: res.data.role ?? prev.role,
-          verified: res.data.verified ?? prev.verified,
+          id: res.data.user.id ?? prev.id,
+          name: res.data.user.fullname ?? prev.name,
+          role: res.data.user.role ?? prev.role,
+          verified: res.data.user.verified ?? prev.verified,
         }));
       } catch (error) {
         console.error('Failed to fetch profile:', error);

@@ -24,27 +24,36 @@ const Login = ({ userType = 'buyer' }) => {
     }));
   };
 
-  const handlelogin = async () => {
-    try {
-      const response = await api.post('/auth/login', formData);
-      localStorage.setItem('token', response.data.token);
-      navigate('/dashboard');
-    } catch (error) {
-      console.error('Login failed:', error);
-      alert('Login failed. Please check your credentials.');
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      // Determine the correct endpoint based on userType
+      let endpoint = '/auth/login/user';
+      let dashboardPath = '/dashboard';
+
+      if (userType === 'producer' || userType === 'farmer') {
+        endpoint = '/auth/login/producer';
+        dashboardPath = '/farmer-dashboard';
+      } else if (userType === 'transporter') {
+        endpoint = '/auth/login/transporter';
+        dashboardPath = '/transporter-available-jobs';
+      }
+
+      const response = await api.post(endpoint, formData);
+      console.log(response);
+
+      // Cookie is set automatically by the backend, no need for localStorage
+      // Navigate to appropriate dashboard
+      navigate(dashboardPath);
+    } catch (error) {
+      console.error('Login failed:', error);
+      const errorMessage = error.response?.data?.error || 'Login failed. Please check your credentials.';
+      alert(errorMessage);
+    } finally {
       setIsLoading(false);
-      // For demo purposes, always succeed
-      navigate('/dashboard');
-    }, 1500);
+    }
   };
 
   const handleSignup = () => {
@@ -58,7 +67,7 @@ const Login = ({ userType = 'buyer' }) => {
   return (
     <div className="pt-20 min-h-screen bg-gradient-to-br from-gray-50 to-white flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className={`max-w-md w-full space-y-8 transform transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-        
+
 
         {/* Header */}
         <div className="text-center">

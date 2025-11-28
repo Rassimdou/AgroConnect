@@ -3,6 +3,7 @@ import cors from "cors";
 import env from "dotenv";
 import { createServer } from "http"; // 1. Import http server
 import { Server } from "socket.io";  // 2. Import Socket.IO Server
+import cookieParser from 'cookie-parser';
 
 import productRoutes from './market/product.routes.js';
 import { initialize as initializeChat } from './chat-system/chat.controller.js'; // ✅ CORRECT // 3. Import chat initializer
@@ -12,7 +13,9 @@ env.config();
 const app = express();
 
 
+
 app.use(express.json());
+app.use(cookieParser());
 
 import authRoutes from './controllers/auth/auth.js';
 import aiRoutes from './AI-verification/airoutes.js';

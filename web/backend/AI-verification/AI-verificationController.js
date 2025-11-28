@@ -167,7 +167,10 @@ const validate_fraud = async (listingName, category, description, price, produce
 
     // Get producer trust score first
     let trust = 5; // Default neutral trust
+    let connection; // Declare connection outside try/catch for scope
+
     try {
+        connection = await getConnection(); // <--- FIX 1: Initialize connection
         const [rows] = await connection.promise().query(
             "SELECT * FROM review_summaries WHERE target_id = ? AND target_type = ?;",
             [producer_id, "producer"]
@@ -187,6 +190,10 @@ const validate_fraud = async (listingName, category, description, price, produce
     } catch (dbError) {
         console.error('Database error fetching trust score:', dbError);
         // Continue with default trust value
+    } finally {
+        if (connection) {
+            await connection.end(); // <--- FIX 1: Ensure connection is closed
+        }
     }
 
     let lastError = null;
@@ -238,6 +245,7 @@ const validate_fraud = async (listingName, category, description, price, produce
         finalFraudScore: 5 + (trust * 0.4) // Fallback: neutral AI score + trust
     };
 };
+
 const check_anomaly = async (producer_id) => {
     try {
         let rating = 0;
@@ -338,9 +346,9 @@ export const validate_product = async (req, res) => {
             product.category,
             product.description,
             product.price.toString(),
-            aiImageScore
+            product.producer_id // <--- FIX 2: Changed from aiImageScore to product.producer_id
         );
-        const fraudScore = fraudResult.success ? fraudResult.fraudRiskScore : 0;
+        const fraudScore = fraudResult.success ? fraudResult.finalFraudScore : 0; // Note: using finalFraudScore
 
         // Step 4: Check Anomaly
         const anomalyScore = await check_anomaly(product.producer_id);
@@ -425,4 +433,3 @@ const aiController = {
 };
 
 export default aiController;
-//
