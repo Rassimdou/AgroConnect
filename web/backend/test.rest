@@ -58,3 +58,11 @@ Content-Type: application/json
     "email": "john.doe@example.com",
     "password": "password"
 }
+
+####
+POST http://localhost:3000/api/ai/validate/product
+Content-Type: application/json
+
+{
+    
+}
