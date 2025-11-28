@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import agriVideo from '../assets/agri.mp4';
 
-const Hero = () => {
+const Hero = ({ onGetStarted }) => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -40,7 +40,10 @@ const Hero = () => {
         </p>
 
         <div className={`flex flex-col sm:flex-row gap-4 justify-center transform transition-all duration-1000 delay-600 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-          <button className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-full transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer">
+          <button
+            onClick={onGetStarted}
+            className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-full transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"
+          >
             Get Started
           </button>
           <button className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-gray-800 font-semibold py-3 px-8 rounded-full transform hover:scale-105 transition-all duration-300 cursor-pointer">

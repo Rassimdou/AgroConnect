@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const Features = () => {
+const Features = ({ onGetStarted }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -105,7 +105,10 @@ const Features = () => {
               Join thousands of Algerian producers, buyers, and transporters already using AgroConnect DZ to streamline their operations.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-white text-green-600 hover:bg-gray-100 font-semibold py-3 px-6 sm:py-4 sm:px-8 rounded-full transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer">
+              <button
+                onClick={onGetStarted}
+                className="bg-white text-green-600 hover:bg-gray-100 font-semibold py-3 px-6 sm:py-4 sm:px-8 rounded-full transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"
+              >
                 Join Now - Free
               </button>
               <button className="border-2 border-white text-white hover:bg-white hover:text-green-600 font-semibold py-3 px-6 sm:py-4 sm:px-8 rounded-full transform hover:scale-105 transition-all duration-300 cursor-pointer">

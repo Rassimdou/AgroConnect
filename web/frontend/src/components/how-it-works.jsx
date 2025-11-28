@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const HowItWorks = () => {
+const HowItWorks = ({ onGetStarted }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -123,7 +123,10 @@ const HowItWorks = () => {
             <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
               Join the growing community of Algerian agricultural professionals using AgroConnect DZ to transform their business operations.
             </p>
-            <button className="bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-10 rounded-full transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer">
+            <button
+              onClick={onGetStarted}
+              className="bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-10 rounded-full transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"
+            >
               Get Started Now
             </button>
           </div>
