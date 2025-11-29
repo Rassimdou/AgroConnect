@@ -19,30 +19,44 @@ const StatusChip = ({ label, color }) => (
         <Text style={[styles.chipText, { color: color }]}>{label}</Text>
     </View>
 );
-label = { item.order_status === 'processing' ? 'In Transit' : item.order_status }
-color = { Colors.light.warning }
-    />
-    <Text style={styles.date}>{new Date(item.created_at).toLocaleDateString()}</Text>
+const openMap = (pickup, dropoff) => {
+    const query = dropoff || pickup;
+    const url = Platform.select({
+        ios: `maps:0,0?q=${query}`,
+        android: `geo:0,0?q=${query}`,
+    });
+    Linking.openURL(url);
+};
+
+const DeliveryCard = ({ item }) => (
+    <View style={styles.card}>
+        <View style={styles.cardHeader}>
+            <View style={styles.headerTop}>
+                <StatusChip
+                    label={item.order_status === 'processing' ? 'In Transit' : item.order_status}
+                    color={Colors.light.warning}
+                />
+                <Text style={styles.date}>{new Date(item.created_at).toLocaleDateString()}</Text>
             </View >
 
-    <View style={styles.routeContainer}>
-        <View style={styles.timeline}>
-            <View style={[styles.dot, { backgroundColor: Colors.light.primary }]} />
-            <View style={styles.line} />
-            <View style={[styles.dot, { backgroundColor: Colors.light.secondary }]} />
-        </View>
+            <View style={styles.routeContainer}>
+                <View style={styles.timeline}>
+                    <View style={[styles.dot, { backgroundColor: Colors.light.primary }]} />
+                    <View style={styles.line} />
+                    <View style={[styles.dot, { backgroundColor: Colors.light.secondary }]} />
+                </View>
 
-        <View style={styles.routeTextContainer}>
-            <View style={styles.routeItem}>
-                <Text style={styles.routeLabel}>PICKUP</Text>
-                <Text style={styles.locationText}>{item.pickup_location}</Text>
+                <View style={styles.routeTextContainer}>
+                    <View style={styles.routeItem}>
+                        <Text style={styles.routeLabel}>PICKUP</Text>
+                        <Text style={styles.locationText}>{item.pickup_location}</Text>
+                    </View>
+                    <View style={[styles.routeItem, { marginTop: 16 }]}>
+                        <Text style={styles.routeLabel}>DROPOFF</Text>
+                        <Text style={styles.locationText}>{item.dropoff_location}</Text>
+                    </View>
+                </View>
             </View>
-            <View style={[styles.routeItem, { marginTop: 16 }]}>
-                <Text style={styles.routeLabel}>DROPOFF</Text>
-                <Text style={styles.locationText}>{item.dropoff_location}</Text>
-            </View>
-        </View>
-    </View>
         </View >
 
         <View style={styles.divider} />

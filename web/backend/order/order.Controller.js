@@ -1,4 +1,4 @@
-import db from "../Auth/db.js";
+import getConnection from "../services/db.js";
 // Note: Assuming 'db' is a connection pool object from the 'mysql' package.
 
 const orderController = {
@@ -7,7 +7,8 @@ const orderController = {
     queryAsync: async (sql, values) => {
         try {
             // mysql2/promise returns [results, fields] array
-            const [results] = await db.query(sql, values);
+            const db = await getConnection();
+            const [results] = await db.promise().query(sql, values);
             return results;
         } catch (error) {
             console.error('[queryAsync] Database error:', error.message);

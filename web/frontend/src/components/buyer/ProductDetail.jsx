@@ -84,6 +84,8 @@ const ProductDetail = () => {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [reviewText, setReviewText] = useState('');
+  const [showOrderModal, setShowOrderModal] = useState(false);
+  const [shippingAddress, setShippingAddress] = useState('');
   const navigate = useNavigate();
   const [initialMessage, setInitialMessage] = useState('');
   const { id } = useParams();
@@ -172,27 +174,21 @@ const ProductDetail = () => {
     }
   };
 
-  const handleOrder = () => {
+  const handleOrderClick = () => {
     if (!currentUser?.id) {
       alert('Please login to place an order');
       navigate('/login');
       return;
     }
-    // Open chat when user clicks order
-    setIsChatOpen(true);
-    // Set the initial message to be sent once connected
-    setInitialMessage(`Hi! I'd like to order ${quantity}kg of ${product.name}. Total: ${product.price * quantity} DZD`);
+    setShippingAddress(currentUser.address || '');
+    setShowOrderModal(true);
   };
 
   const handleConfirmOrder = async () => {
-    if (!currentUser?.id) {
-      alert('Please login to place an order');
-      navigate('/login');
+    if (!shippingAddress.trim()) {
+      alert('Please provide a shipping address');
       return;
     }
-
-    const address = prompt("Please confirm your shipping address:", currentUser.address || "Algiers, Algeria");
-    if (!address) return;
 
     try {
       const response = await api.post('/orders/create', {
@@ -200,11 +196,14 @@ const ProductDetail = () => {
         product_id: product.id,
         quantity: quantity,
         price: product.price,
-        shipping_address: address
+        shipping_address: shippingAddress
       });
 
       if (response.data.success) {
         alert(`Order placed successfully! Order ID: ${response.data.orderId}`);
+        setShowOrderModal(false);
+        // Optionally open chat to confirm
+        if (!isChatOpen) setIsChatOpen(true);
         sendMessage(`I have placed an order (ID: ${response.data.orderId}) for ${quantity}kg of ${product.name}.`);
       }
     } catch (err) {
@@ -445,7 +444,7 @@ const ProductDetail = () => {
               {/* Action Buttons */}
               <div className="flex gap-4">
                 <button
-                  onClick={handleOrder}
+                  onClick={handleOrderClick}
                   className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-6 rounded-lg text-lg transition-colors duration-200 shadow-lg hover:shadow-xl cursor-pointer"
                 >
                   {t('productDetail.orderNow')} {product.price * quantity} DZD
@@ -595,7 +594,7 @@ const ProductDetail = () => {
               </div>
               <div className="flex items-center gap-2">
                 <button
-                  onClick={handleConfirmOrder}
+                  onClick={handleOrderClick}
                   className="bg-white text-green-600 hover:bg-green-50 px-3 py-1 rounded-lg text-sm font-semibold transition-colors shadow-sm"
                 >
                   {t('productDetail.chatModal.confirmOrder')}
@@ -643,7 +642,7 @@ const ProductDetail = () => {
                   </div>
                 )}
                 {chatMessages.map((msg) => {
-                  const isSentByMe = msg.sender_id === currentUser?.id;
+                  const isSentByMe = msg.sender_id == currentUser?.id;
                   return (
                     <div
                       key={msg.id || msg.tempId}
@@ -770,7 +769,7 @@ const ProductDetail = () => {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         strokeWidth="2"
-                        d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+                        d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.784.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
                       />
                     </svg>
                   </button>
@@ -813,6 +812,62 @@ const ProductDetail = () => {
                 {t('productDetail.reviewModal.submit')}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Order Confirmation Modal */}
+      {showOrderModal && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-2xl font-bold text-gray-900">{t('productDetail.orderModal.title') || 'Confirm Order'}</h3>
+              <button
+                onClick={() => setShowOrderModal(false)}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </button>
+            </div>
+
+            <div className="space-y-4 mb-6">
+              <div className="bg-gray-50 p-4 rounded-lg space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">{t('productDetail.product')}</span>
+                  <span className="font-semibold">{product.name}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">{t('productDetail.quantity')}</span>
+                  <span className="font-semibold">{quantity} kg</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">{t('productDetail.totalPrice')}</span>
+                  <span className="font-bold text-green-600">{product.price * quantity} DZD</span>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('productDetail.orderModal.shippingAddress') || 'Shipping Address'}
+                </label>
+                <textarea
+                  value={shippingAddress}
+                  onChange={(e) => setShippingAddress(e.target.value)}
+                  placeholder="Enter your full delivery address..."
+                  rows="3"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+                />
+              </div>
+            </div>
+
+            <button
+              onClick={handleConfirmOrder}
+              className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-semibold transition-colors shadow-lg hover:shadow-xl"
+            >
+              {t('productDetail.orderModal.confirm') || 'Confirm Order'}
+            </button>
           </div>
         </div>
       )}
