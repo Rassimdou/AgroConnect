@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Header from '../header';
 import Footer from '../footer';
+import ChatModal from '../ChatModal';
 import farmImage from '../../assets/farm.jpg';
-import api from '../../services/api';
+import { productAPI } from '../../services/api';
 
 // Dummy data for products with demand info
 const dummyProducts = [
@@ -88,6 +90,7 @@ const dummyProducts = [
 ];
 
 const Marketplace = () => {
+  const { t } = useTranslation();
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -98,7 +101,25 @@ const Marketplace = () => {
     priceRange: '',
     demand: ''
   });
+  const [chatModal, setChatModal] = useState({
+    isOpen: false,
+    product: null
+  });
+  const [currentUser, setCurrentUser] = useState(null);
   const navigate = useNavigate();
+
+  // Mock current user - in real app, get from auth context or API
+  const mockCurrentUser = {
+    id: 1, // Mock user ID
+    name: 'John Buyer',
+    type: 'user'
+  };
+
+  // Fetch current user profile
+  useEffect(() => {
+    // For now, use mock user. In real app, fetch from API
+    setCurrentUser(mockCurrentUser);
+  }, []);
 
   const normalizeProducts = (items = []) =>
     items.map((item, idx) => ({
@@ -107,10 +128,16 @@ const Marketplace = () => {
       price: Number(item.price) || 0,
       quantity: item.quantity_available ?? item.quantity ?? 0,
       qualityScore: item.quality_score ?? item.qualityScore ?? 70,
-      region: item.region ?? item.location ?? 'Unknown region',
+      region: item.producer?.location ?? item.region ?? item.location ?? 'Unknown region',
       type: item.category ?? item.type ?? 'Other',
       image: item.images?.[0]?.image_url ?? item.image ?? '🛒',
       supplier: item.producer?.fullname ?? item.supplier ?? `Producer #${item.producer_id ?? 'N/A'}`,
+      producerInfo: item.producer ? {
+        id: item.producer.id,
+        name: item.producer.fullname,
+        location: item.producer.location,
+        phone: item.producer.phone_number
+      } : null,
       demand: item.demand ?? item.demand_level ?? 'Medium',
       inquiries: item.inquiries ?? item.inquiries_count ?? 0,
     }));
@@ -120,7 +147,7 @@ const Marketplace = () => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const { data } = await api.get('/market/Getproduct');
+        const data = await productAPI.getAllProducts();
         const normalized = normalizeProducts(data);
         setProducts(normalized.length ? normalized : dummyProducts);
         setFilteredProducts(normalized.length ? normalized : dummyProducts);
@@ -206,8 +233,18 @@ const Marketplace = () => {
   };
 
   const handleContactSeller = (product) => {
-    // Navigate to contact page or open chat
-    alert(`Contacting seller for ${product.name}`);
+    // Open chat modal with the product and seller info
+    setChatModal({
+      isOpen: true,
+      product: product
+    });
+  };
+
+  const closeChatModal = () => {
+    setChatModal({
+      isOpen: false,
+      product: null
+    });
   };
 
   return (
@@ -225,11 +262,11 @@ const Marketplace = () => {
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="text-center max-w-4xl mx-auto">
               <h1 className="text-4xl md:text-6xl font-bold mb-6">
-                Explore Market
-                <span className="block text-green-400">Opportunities</span>
+                {t('Explore Market Opportunities').split(' ').slice(0, -1).join(' ')}
+                <span className="block text-green-400">{t('Explore Market Opportunities').split(' ').slice(-1)}</span>
               </h1>
               <p className="text-xl text-green-100 mb-8 max-w-2xl mx-auto">
-                Discover what other farmers are selling, track market prices, and understand demand trends to optimize your farming business.
+                {t('marketplaceHeroDescription')}
               </p>
             </div>
           </div>
@@ -241,7 +278,7 @@ const Marketplace = () => {
             <div className="flex items-center justify-center py-20">
               <div className="text-center">
                 <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-green-600 mx-auto mb-4"></div>
-                <p className="text-gray-600 text-lg">Loading market data...</p>
+                <p className="text-gray-600 text-lg">{t('Loading market data...')}</p>
               </div>
             </div>
           )}
@@ -254,13 +291,13 @@ const Marketplace = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Oops! Something went wrong</h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">{t('Oops! Something went wrong')}</h3>
               <p className="text-gray-600 mb-8 max-w-md mx-auto">{error}</p>
               <button
                 onClick={() => window.location.reload()}
                 className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
               >
-                Try Again
+                {t('Try Again')}
               </button>
             </div>
           )}
@@ -271,7 +308,7 @@ const Marketplace = () => {
               <div className="lg:w-1/4">
                 <div className="bg-white rounded-2xl shadow-xl p-8 sticky top-24 border border-gray-100">
                   <div className="flex items-center justify-between mb-8">
-                    <h2 className="text-2xl font-bold text-gray-900">Filters</h2>
+                    <h2 className="text-2xl font-bold text-gray-900">{t('Filters')}</h2>
                     <button
                       onClick={clearFilters}
                       className="text-sm text-green-600 hover:text-green-700 font-semibold flex items-center hover:underline transition-all duration-300"
@@ -279,7 +316,7 @@ const Marketplace = () => {
                       <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
                       </svg>
-                      Clear All
+                      {t('Clear All')}
                     </button>
                   </div>
 
@@ -289,14 +326,14 @@ const Marketplace = () => {
                       <svg className="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
                       </svg>
-                      Product Type
+                      {t('Product Type')}
                     </label>
                     <div className="space-y-3">
                       {[
-                        { value: '', label: 'All Types', count: filteredProducts.length },
-                        { value: 'Fruits', label: 'Fruits', count: products.filter(p => p.type === 'Fruits').length },
-                        { value: 'Vegetables', label: 'Vegetables', count: products.filter(p => p.type === 'Vegetables').length },
-                        { value: 'Grains', label: 'Grains', count: products.filter(p => p.type === 'Grains').length }
+                        { value: '', label: t('All Types'), count: filteredProducts.length },
+                        { value: 'Fruits', label: t('Fruits'), count: products.filter(p => p.type === 'Fruits').length },
+                        { value: 'Vegetables', label: t('Vegetables'), count: products.filter(p => p.type === 'Vegetables').length },
+                        { value: 'Grains', label: t('Grains'), count: products.filter(p => p.type === 'Grains').length }
                       ].map((option) => (
                         <label key={option.value} className="flex items-center justify-between p-3 rounded-xl hover:bg-green-50 cursor-pointer transition-all duration-300 group">
                           <div className="flex items-center">
@@ -323,17 +360,17 @@ const Marketplace = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                       </svg>
-                      Region
+                      {t('Region')}
                     </label>
                     <div className="space-y-3">
                       {[
-                        { value: '', label: 'All Regions', count: filteredProducts.length },
-                        { value: 'Algiers', label: 'Algiers', count: products.filter(p => p.region === 'Algiers').length },
-                        { value: 'Oran', label: 'Oran', count: products.filter(p => p.region === 'Oran').length },
-                        { value: 'Constantine', label: 'Constantine', count: products.filter(p => p.region === 'Constantine').length },
-                        { value: 'Biskra', label: 'Biskra', count: products.filter(p => p.region === 'Biskra').length },
-                        { value: 'Sétif', label: 'Sétif', count: products.filter(p => p.region === 'Sétif').length },
-                        { value: 'Tlemcen', label: 'Tlemcen', count: products.filter(p => p.region === 'Tlemcen').length }
+                        { value: '', label: t('All Regions'), count: filteredProducts.length },
+                        { value: 'Algiers', label: t('Algiers'), count: products.filter(p => p.region?.toLowerCase().includes('algiers')).length },
+                        { value: 'Oran', label: t('Oran'), count: products.filter(p => p.region?.toLowerCase().includes('oran')).length },
+                        { value: 'Constantine', label: t('Constantine'), count: products.filter(p => p.region?.toLowerCase().includes('constantine')).length },
+                        { value: 'Biskra', label: t('Biskra'), count: products.filter(p => p.region?.toLowerCase().includes('biskra')).length },
+                        { value: 'Sétif', label: t('Sétif'), count: products.filter(p => p.region?.toLowerCase().includes('sétif') || p.region?.toLowerCase().includes('setif')).length },
+                        { value: 'Tlemcen', label: t('Tlemcen'), count: products.filter(p => p.region?.toLowerCase().includes('tlemcen')).length }
                       ].map((option) => (
                         <label key={option.value} className="flex items-center justify-between p-3 rounded-xl hover:bg-blue-50 cursor-pointer transition-all duration-300 group">
                           <div className="flex items-center">
@@ -359,15 +396,15 @@ const Marketplace = () => {
                       <svg className="w-5 h-5 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
                       </svg>
-                      Price Range (DZD/kg)
+                      {t('Price Range (DZD/kg)')}
                     </label>
                     <div className="space-y-3">
                       {[
-                        { value: '', label: 'All Prices', count: filteredProducts.length },
-                        { value: '0-200', label: 'Under 200 DZD', count: products.filter(p => p.price < 200).length },
-                        { value: '200-400', label: '200 - 400 DZD', count: products.filter(p => p.price >= 200 && p.price <= 400).length },
-                        { value: '400-600', label: '400 - 600 DZD', count: products.filter(p => p.price >= 400 && p.price <= 600).length },
-                        { value: '600', label: 'Over 600 DZD', count: products.filter(p => p.price > 600).length }
+                        { value: '', label: t('All Prices'), count: filteredProducts.length },
+                        { value: '0-200', label: t('Under 200 DZD'), count: products.filter(p => p.price < 200).length },
+                        { value: '200-400', label: t('200 - 400 DZD'), count: products.filter(p => p.price >= 200 && p.price <= 400).length },
+                        { value: '400-600', label: t('400 - 600 DZD'), count: products.filter(p => p.price >= 400 && p.price <= 600).length },
+                        { value: '600', label: t('Over 600 DZD'), count: products.filter(p => p.price > 600).length }
                       ].map((option) => (
                         <label key={option.value} className="flex items-center justify-between p-3 rounded-xl hover:bg-purple-50 cursor-pointer transition-all duration-300 group">
                           <div className="flex items-center">
@@ -393,14 +430,14 @@ const Marketplace = () => {
                       <svg className="w-5 h-5 mr-2 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
                       </svg>
-                      Demand Level
+                      {t('Demand Level')}
                     </label>
                     <div className="space-y-3">
                       {[
-                        { value: '', label: 'All Levels', count: filteredProducts.length },
-                        { value: 'High', label: 'High Demand', count: products.filter(p => p.demand === 'High').length },
-                        { value: 'Medium', label: 'Medium Demand', count: products.filter(p => p.demand === 'Medium').length },
-                        { value: 'Low', label: 'Low Demand', count: products.filter(p => p.demand === 'Low').length }
+                        { value: '', label: t('All Levels'), count: filteredProducts.length },
+                        { value: 'High', label: t('High Demand'), count: products.filter(p => p.demand === 'High').length },
+                        { value: 'Medium', label: t('Medium Demand'), count: products.filter(p => p.demand === 'Medium').length },
+                        { value: 'Low', label: t('Low Demand'), count: products.filter(p => p.demand === 'Low').length }
                       ].map((option) => (
                         <label key={option.value} className="flex items-center justify-between p-3 rounded-xl hover:bg-orange-50 cursor-pointer transition-all duration-300 group">
                           <div className="flex items-center">
@@ -422,7 +459,7 @@ const Marketplace = () => {
 
                   {/* Active Filters Summary */}
                   <div className="pt-4 border-t border-gray-200">
-                    <p className="text-sm text-gray-600 mb-2">Active Filters:</p>
+                    <p className="text-sm text-gray-600 mb-2">{t('Active Filters:')}</p>
                     <div className="flex flex-wrap gap-2">
                       {filters.type && (
                         <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">
@@ -456,19 +493,19 @@ const Marketplace = () => {
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
                       <h2 className="text-2xl font-bold text-gray-900 mb-1">
-                        {filteredProducts.length} Market Products Found
+                        {filteredProducts.length} {t('Market Products Found')}
                       </h2>
-                      <p className="text-gray-600">Explore pricing trends and market demand</p>
+                      <p className="text-gray-600">{t('Explore pricing trends and market demand')}</p>
                     </div>
                     <div className="flex items-center space-x-4">
-                      <span className="text-sm font-medium text-gray-700">Sort by:</span>
+                      <span className="text-sm font-medium text-gray-700">{t('Sort by:')}</span>
                       <select className="text-sm border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white shadow-sm">
-                        <option>Price: Low to High</option>
-                        <option>Price: High to Low</option>
-                        <option>Demand: High to Low</option>
-                        <option>Quality Score</option>
-                        <option>Newest First</option>
-                        <option>Region: A-Z</option>
+                        <option>{t('Price: Low to High')}</option>
+                        <option>{t('Price: High to Low')}</option>
+                        <option>{t('Demand: High to Low')}</option>
+                        <option>{t('Quality Score')}</option>
+                        <option>{t('Newest First')}</option>
+                        <option>{t('Region: A-Z')}</option>
                       </select>
                     </div>
                   </div>
@@ -477,7 +514,7 @@ const Marketplace = () => {
                   {(filters.type || filters.region || filters.priceRange || filters.demand) && (
                     <div className="mt-4 pt-4 border-t border-gray-200">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="text-sm font-medium text-gray-700">Active filters:</span>
+                        <span className="text-sm font-medium text-gray-700">{t('Active filters:')}</span>
                         {filters.type && (
                           <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-green-100 text-green-800 font-medium">
                             <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -516,7 +553,7 @@ const Marketplace = () => {
                             <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
                             </svg>
-                            {filters.priceRange === '600' ? 'Over 600 DZD' : filters.priceRange.replace('-', ' - ') + ' DZD'}
+                            {filters.priceRange === '600' ? t('Over 600 DZD') : filters.priceRange.replace('-', ' - ') + ' DZD'}
                             <button
                               onClick={() => handleFilterChange('priceRange', '')}
                               className="ml-2 hover:bg-purple-200 rounded-full p-0.5"
@@ -580,12 +617,23 @@ const Marketplace = () => {
                             <h3 className="text-xl font-bold text-gray-900 mb-1 group-hover:text-green-700 transition-colors duration-300">
                               {product.name}
                             </h3>
-                            <p className="text-sm text-gray-600 flex items-center">
-                              <svg className="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                              </svg>
-                              {product.supplier}
-                            </p>
+                            <div className="text-sm text-gray-600">
+                              <p className="flex items-center mb-1">
+                                <svg className="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                                {product.supplier}
+                              </p>
+                              {product.producerInfo && (
+                                <p className="flex items-center text-xs text-gray-500">
+                                  <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                  </svg>
+                                  {product.producerInfo.location}
+                                </p>
+                              )}
+                            </div>
                           </div>
                           <div className="text-right">
                             <div className="text-2xl font-bold text-green-600 mb-1">
@@ -599,13 +647,13 @@ const Marketplace = () => {
                         {/* Details */}
                         <div className="space-y-3 mb-6">
                           <div className="flex items-center justify-between text-sm">
-                            <span className="text-gray-600">Quality:</span>
+                            <span className="text-gray-600">{t('Quality:')}</span>
                             <span className={`font-semibold ${product.qualityScore >= 80 ? 'text-green-600' : product.qualityScore >= 50 ? 'text-yellow-600' : 'text-red-600'}`}>
-                              {getQualityScoreLabel(product.qualityScore)}
+                              {t(getQualityScoreLabel(product.qualityScore))}
                             </span>
                           </div>
                           <div className="flex items-center justify-between text-sm">
-                            <span className="text-gray-600">Region:</span>
+                            <span className="text-gray-600">{t('Region')}</span>
                             <span className="font-semibold text-gray-900 flex items-center">
                               <svg className="w-4 h-4 mr-1 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
@@ -615,17 +663,17 @@ const Marketplace = () => {
                             </span>
                           </div>
                           <div className="flex items-center justify-between text-sm">
-                            <span className="text-gray-600">Available:</span>
+                            <span className="text-gray-600">{t('Available:')}</span>
                             <span className="font-semibold text-gray-900">{product.quantity}kg</span>
                           </div>
                           <div className="flex items-center justify-between text-sm">
-                            <span className="text-gray-600">Demand:</span>
+                            <span className="text-gray-600">{t('Demand:')}</span>
                             <span className={`font-semibold ${product.demand === 'High' ? 'text-red-600' : product.demand === 'Medium' ? 'text-yellow-600' : 'text-green-600'}`}>
                               {product.demand}
                             </span>
                           </div>
                           <div className="flex items-center justify-between text-sm">
-                            <span className="text-gray-600">Inquiries:</span>
+                            <span className="text-gray-600">{t('Inquiries:')}</span>
                             <span className="font-semibold text-gray-900">{product.inquiries}</span>
                           </div>
                         </div>
@@ -653,7 +701,7 @@ const Marketplace = () => {
                           <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
                           </svg>
-                          Contact Seller
+                          {t('Contact Seller')}
                         </button>
                       </div>
                     </div>
@@ -668,22 +716,22 @@ const Marketplace = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                       </svg>
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-3">No products found</h3>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-3">{t('No products found')}</h3>
                     <p className="text-gray-600 mb-8 max-w-md mx-auto">
-                      We couldn't find any products matching your current filters. Try adjusting your search criteria or clearing some filters.
+                      {t('noProductsDescription')}
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                       <button
                         onClick={clearFilters}
                         className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
                       >
-                        Clear All Filters
+                        {t('Clear All Filters')}
                       </button>
                       <button
-                        onClick={() => navigate('/farmer-marketplace')}
+                        onClick={() => navigate('/marketplace')}
                         className="bg-white border-2 border-gray-300 hover:border-green-500 text-gray-700 hover:text-green-600 px-8 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
                       >
-                        Browse All Products
+                        {t('Browse All Products')}
                       </button>
                     </div>
                   </div>
@@ -694,6 +742,14 @@ const Marketplace = () => {
         </div>
       </div>
       <Footer />
+
+      {/* Chat Modal */}
+      <ChatModal
+        isOpen={chatModal.isOpen}
+        onClose={closeChatModal}
+        product={chatModal.product}
+        currentUser={currentUser}
+      />
     </>
   );
 };

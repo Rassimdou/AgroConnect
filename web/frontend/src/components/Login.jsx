@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import api from '../services/api'
 
 const Login = ({ userType = 'buyer' }) => {
+  const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -75,10 +77,10 @@ const Login = ({ userType = 'buyer' }) => {
             <span className="text-2xl">🌱</span>
           </div>
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
-            Welcome Back
+            {t('Welcome Back')}
           </h2>
           <p className="text-gray-600">
-            Sign in to your {userType} account
+            {t('Sign in to your account')} {userType} {t('account').toLowerCase()}
           </p>
         </div>
 
@@ -88,7 +90,7 @@ const Login = ({ userType = 'buyer' }) => {
             {/* Email */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                Email Address
+                {t('Email Address')}
               </label>
               <div className="relative">
                 <input
@@ -100,7 +102,7 @@ const Login = ({ userType = 'buyer' }) => {
                   value={formData.email}
                   onChange={handleInputChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300 pr-10"
-                  placeholder="Enter your email"
+                  placeholder={t('Enter your email')}
                 />
                 <svg className="absolute right-3 top-3.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
@@ -111,7 +113,7 @@ const Login = ({ userType = 'buyer' }) => {
             {/* Password */}
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                Password
+                {t('Password')}
               </label>
               <div className="relative">
                 <input
@@ -123,7 +125,7 @@ const Login = ({ userType = 'buyer' }) => {
                   value={formData.password}
                   onChange={handleInputChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300 pr-10"
-                  placeholder="Enter your password"
+                  placeholder={t('Enter your password')}
                 />
                 <button
                   type="button"
@@ -155,11 +157,11 @@ const Login = ({ userType = 'buyer' }) => {
                 className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
               />
               <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
-                Remember me
+                {t('Remember me')}
               </label>
             </div>
             <button type="button" className="text-sm text-green-600 hover:text-green-700 font-medium transition-colors duration-300">
-              Forgot password?
+              {t('Forgot password?')}
             </button>
           </div>
 
@@ -175,23 +177,23 @@ const Login = ({ userType = 'buyer' }) => {
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                Signing in...
+                {t('Signing in...')}
               </div>
             ) : (
-              'Sign In'
+              t('Sign In')
             )}
           </button>
 
           {/* Sign Up Link */}
           <div className="text-center">
             <p className="text-gray-600">
-              Don't have an account?{' '}
+              {t('Don\'t have an account?')}{' '}
               <button
                 type="button"
                 onClick={handleSignup}
                 className="text-green-600 hover:text-green-700 font-semibold transition-colors duration-300"
               >
-                Sign up here
+                {t('Sign up here')}
               </button>
             </p>
           </div>
@@ -201,7 +203,7 @@ const Login = ({ userType = 'buyer' }) => {
         <div className="mt-8 text-center">
           <div className="bg-green-50 rounded-lg p-4">
             <p className="text-sm text-green-800">
-              🔒 Your data is secure and encrypted. We never share your information with third parties.
+              🔒 {t('Your data is secure and encrypted. We never share your information with third parties.')}
             </p>
           </div>
         </div>

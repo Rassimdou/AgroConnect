@@ -52,6 +52,8 @@ const Profile = () => {
           ...prev,
           id: res.data.user.id ?? prev.id,
           name: res.data.user.fullname ?? prev.name,
+          email: res.data.user.email ?? prev.email,
+          phone: res.data.user.phone_number ?? prev.phone,
           role: res.data.user.role ?? prev.role,
           verified: res.data.user.verified ?? prev.verified,
         }));

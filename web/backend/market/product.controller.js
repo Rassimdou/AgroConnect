@@ -1,16 +1,39 @@
-
 import prisma from '../prisma/client.js';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import aiController from '../AI-verification/AI-verificationController.js';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export const createProduct = async (req, res) => {
     const producerId = req.user ? parseInt(req.user.id) : 1;
-    const { name, images, category, description, quantity_available, price } = req.body;
+    const { name, category, description, quantity_available, price, minimum_order_amount } = req.body;
 
     if (!name || !category || !description || price === undefined) {
+        // Clean up uploaded files if validation fails
+        if (req.files && req.files.length > 0) {
+            req.files.forEach(file => {
+                try {
+                    fs.unlinkSync(file.path);
+                } catch (unlinkError) {
+                    console.error("Error deleting file:", unlinkError);
+                }
+            });
+        }
         return res.status(400).json({ message: "All required fields must be provided." });
     }
 
     try {
+        // Handle image paths from uploaded files
+        let imagePaths = [];
+        let fileSystemPaths = [];
+        if (req.files && req.files.length > 0) {
+            imagePaths = req.files.map(file => `/uploads/products/${file.filename}`);
+            fileSystemPaths = req.files.map(file => file.path);
+        }
+
         const newProduct = await prisma.product.create({
             data: {
                 producer_id: producerId,
@@ -19,21 +42,48 @@ export const createProduct = async (req, res) => {
                 description,
                 quantity_available: parseInt(quantity_available),
                 price: parseFloat(price),
-                minimum_order_amount: 1,
+                minimum_order_amount: minimum_order_amount ? parseInt(minimum_order_amount) : 1,
                 state: 'pending_ai',
-                images: images && images.length > 0 ? {
-                    create: images.map((imageUrl) => ({ image_url: imageUrl })),
+                images: imagePaths.length > 0 ? {
+                    create: imagePaths.map((imageUrl) => ({ image_url: imageUrl })),
                 } : undefined,
             },
-            include: { images: true }, 
+            include: { images: true },
         });
 
-        res.status(201).json({
-            message: "Product successfully published for review.",
-            product: newProduct
-        });
+        // If there are images, trigger AI validation
+        if (fileSystemPaths.length > 0) {
+            // Prepare request body for AI validation
+            const aiReq = {
+                body: {
+                    product_id: newProduct.id,
+                    image_path: fileSystemPaths[0], // Use file system path, not URL
+                }
+            };
+
+            // Call AI validation (it will handle its own response)
+            await aiController.validate_product(aiReq, res);
+        } else {
+            // No images, just return success
+            res.status(201).json({
+                message: "Product successfully published for review.",
+                product: newProduct
+            });
+        }
     } catch (error) {
         console.error("Prisma Error:", error);
+
+        // Clean up uploaded files if database insert fails
+        if (req.files && req.files.length > 0) {
+            req.files.forEach(file => {
+                try {
+                    fs.unlinkSync(file.path);
+                } catch (unlinkError) {
+                    console.error("Error deleting file:", unlinkError);
+                }
+            });
+        }
+
         res.status(500).json({ message: "Error publishing product.", error: error.message });
     }
 };
@@ -43,24 +93,51 @@ export const createProduct = async (req, res) => {
 export const getProductById = async (req, res) => {
     try {
         const productId = parseInt(req.params.id);
-        
+
         const product = await prisma.product.findUnique({
             where: { id: productId },
             include: {
-                
-                images: true, 
+
+                images: true,
                 producer: { select: { id: true, fullname: true } }
             },
         });
-        
+
         if (!product) {
             return res.status(404).json({ message: "Product not found" });
         }
         res.status(200).json(product);
     } catch (error) {
         console.error("Prisma Error:", error);
-      
+
         res.status(400).json({ message: "Invalid product ID or internal server error", error: error.message });
+    }
+};
+
+
+
+export const getAllProducts = async (req, res) => {
+    try {
+        const products = await prisma.product.findMany({
+            include: {
+                images: true,
+                producer: {
+                    select: {
+                        id: true,
+                        fullname: true,
+                        location: true,
+                        phone_number: true
+                    }
+                }
+            },
+            orderBy: {
+                created_at: 'desc',
+            },
+        });
+        res.status(200).json(products);
+    } catch (error) {
+        console.error("Prisma Error:", error);
+        res.status(500).json({ message: "Internal server error", error: error.message });
     }
 };
 
@@ -95,8 +172,8 @@ export const updateProduct = async (req, res) => {
     const updates = req.body;
 
     // Filter out non-updatable fields
-    delete updates.producer_id; 
-    delete updates.state; 
+    delete updates.producer_id;
+    delete updates.state;
 
     try {
         const updatedProduct = await prisma.product.update({
@@ -104,7 +181,7 @@ export const updateProduct = async (req, res) => {
                 id: productId,
             },
             data: {
-            ...updates,
+                ...updates,
                 state: 'pending_ai', // <-- use the correct enum value
                 quantity_available: updates.quantity_available ? parseInt(updates.quantity_available) : undefined,
                 price: updates.price ? parseFloat(updates.price) : undefined,

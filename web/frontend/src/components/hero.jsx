@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import agriVideo from '../assets/agri.mp4';
 
 const Hero = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -33,12 +35,12 @@ const Hero = () => {
       {/* Content */}
       <div className={`relative z-10 text-center text-white px-4 sm:px-6 transform transition-all duration-1000 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
         <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight">
-          AgroConnect
-          <span className="block text-green-400 animate-pulse">DZ</span>
+          {t('heroTitle')}
+          <span className="block text-green-400 animate-pulse">{t('heroSubtitle')}</span>
         </h1>
 
         <p className={`text-xl md:text-2xl mb-8 max-w-3xl mx-auto transform transition-all duration-1000 delay-300 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-          Digital Market connecting producers, buyers and transporters to streamline logistics, pricing and distribution in Algeria.
+          {t('heroDescription')}
         </p>
 
         <div className={`flex flex-col sm:flex-row gap-4 justify-center transform transition-all duration-1000 delay-600 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
@@ -46,10 +48,10 @@ const Hero = () => {
             onClick={() => navigate('/user-selection')}
             className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-full transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"
           >
-            Get Started
+            {t('Get Started')}
           </button>
           <button className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-gray-800 font-semibold py-3 px-8 rounded-full transform hover:scale-105 transition-all duration-300 cursor-pointer">
-            Learn More
+            {t('Learn More')}
           </button>
         </div>
 

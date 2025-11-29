@@ -1,48 +1,50 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const UserTypeSelection = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [selectedType, setSelectedType] = useState(null);
 
   const userTypes = [
     {
       id: 'producer',
-      title: 'Producer',
-      subtitle: 'Agricultural Producer',
-      description: 'List your products, manage inventory, and connect with buyers across Algeria.',
+      title: t('Producer'),
+      subtitle: t('Agricultural Producer'),
+      description: t('List your products, manage inventory, and connect with buyers across Algeria.'),
       icon: (
         <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
         </svg>
       ),
-      features: ['List Products', 'Manage Inventory', 'Real-time Pricing', 'Direct Communication'],
+      features: [t('List Products'), t('Manage Inventory'), t('Real-time Pricing'), t('Direct Communication')],
       color: 'green'
     },
     {
       id: 'buyer',
-      title: 'Buyer',
-      subtitle: 'Agricultural Buyer',
-      description: 'Find quality products, compare prices, and source from verified producers.',
+      title: t('Buyer'),
+      subtitle: t('Agricultural Buyer'),
+      description: t('Find quality products, compare prices, and source from verified producers.'),
       icon: (
         <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
         </svg>
       ),
-      features: ['Browse Products', 'Compare Prices', 'Verified Suppliers', 'Bulk Ordering'],
+      features: [t('Browse Products'), t('Compare Prices'), t('Verified Suppliers'), t('Bulk Ordering')],
       color: 'green'
     },
     {
       id: 'transporter',
-      title: 'Transporter',
-      subtitle: 'Logistics Provider',
-      description: 'Offer transportation services and connect with shippers across all wilayas.',
+      title: t('Transporter'),
+      subtitle: t('Logistics Provider'),
+      description: t('Offer transportation services and connect with shippers across all wilayas.'),
       icon: (
         <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V7M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path>
         </svg>
       ),
-      features: ['Route Optimization', 'Real-time Tracking', 'Capacity Management', 'Multi-wilaya Coverage'],
+      features: [t('Route Optimization'), t('Real-time Tracking'), t('Capacity Management'), t('Multi-wilaya Coverage')],
       color: 'green'
     }
   ];
@@ -96,10 +98,10 @@ const UserTypeSelection = () => {
           
 
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Join <span className="text-green-600">AgroConnect DZ</span>
+            {t('Join AgroConnect DZ')}
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Choose your role in Algeria's digital agricultural marketplace and start transforming your business today.
+            {t('Choose your role in Algeria\'s digital agricultural marketplace and start transforming your business today.')}
           </p>
         </div>
 
@@ -161,7 +163,7 @@ const UserTypeSelection = () => {
                         : `${colors.button} hover:scale-105`
                     }`}
                   >
-                    {selectedType === type.id ? `Continue as ${type.title}` : `Select ${type.title}`}
+                    {selectedType === type.id ? `${t('Continue as')} ${type.title}` : `${t('Select')} ${type.title}`}
                   </button>
                 </div>
 
@@ -175,7 +177,7 @@ const UserTypeSelection = () => {
         {/* Additional Info */}
         <div className="mt-16 text-center">
           <div className="bg-white rounded-xl shadow-lg p-8 max-w-4xl mx-auto">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Why Choose AgroConnect DZ?</h3>
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">{t('Why Choose AgroConnect DZ?')}</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
               <div className="text-center">
                 <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -183,8 +185,8 @@ const UserTypeSelection = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                   </svg>
                 </div>
-                <h4 className="font-semibold text-gray-900 mb-2">Verified & Secure</h4>
-                <p className="text-gray-600 text-sm">All users are verified with secure payment processing</p>
+                <h4 className="font-semibold text-gray-900 mb-2">{t('Verified & Secure')}</h4>
+                <p className="text-gray-600 text-sm">{t('All users are verified with secure payment processing')}</p>
               </div>
               <div className="text-center">
                 <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -192,8 +194,8 @@ const UserTypeSelection = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                   </svg>
                 </div>
-                <h4 className="font-semibold text-gray-900 mb-2">Fast & Efficient</h4>
-                <p className="text-gray-600 text-sm">Streamlined processes save time and reduce costs</p>
+                <h4 className="font-semibold text-gray-900 mb-2">{t('Fast & Efficient')}</h4>
+                <p className="text-gray-600 text-sm">{t('Streamlined processes save time and reduce costs')}</p>
               </div>
               <div className="text-center">
                 <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -201,8 +203,8 @@ const UserTypeSelection = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"></path>
                   </svg>
                 </div>
-                <h4 className="font-semibold text-gray-900 mb-2">Nationwide Coverage</h4>
-                <p className="text-gray-600 text-sm">Connect across all 48 Algerian wilayas</p>
+                <h4 className="font-semibold text-gray-900 mb-2">{t('Nationwide Coverage')}</h4>
+                <p className="text-gray-600 text-sm">{t('Connect across all 48 Algerian wilayas')}</p>
               </div>
             </div>
           </div>

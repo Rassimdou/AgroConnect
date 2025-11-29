@@ -266,10 +266,10 @@ export const getuserProfile = (req, res) => {
 };
 
 export const getproducerProfile = (req, res) => {
-    res.json({ producer: req.producer });
+    res.json({ producer: req.user });
 };
 export const gettransporterProfile = (req, res) => {
-    res.json({ transporter: req.transporter });
+    res.json({ transporter: req.user });
 };
 
 export const logout = (req, res) => {

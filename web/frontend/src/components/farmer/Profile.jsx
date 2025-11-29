@@ -1,47 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../header';
 import Footer from '../footer';
+import { farmerAPI } from '../../services/api';
 
-// Mock farmer profile data
-const farmerProfileData = {
+// Default farmer profile data (used until API responds)
+const defaultFarmerProfile = {
   personalInfo: {
-    firstName: 'Ahmed',
-    lastName: 'Bouchene',
-    email: 'ahmed.bouchene@example.com',
-    phone: '+213 555 123 456',
-    address: 'Farm El Baraka, Route de Blida, Algiers',
-    joinDate: '2023-01-15',
+    firstName: 'Loading...',
+    lastName: '',
+    email: 'loading@email.com',
+    phone: '+213 000 000 000',
+    address: 'Loading address...',
+    joinDate: '',
     avatar: '🌾'
   },
   farmInfo: {
-    farmName: 'El Baraka Organic Farm',
-    farmType: 'Mixed Agriculture',
-    established: '2018',
-    totalArea: '8.5 hectares',
-    specialty: 'Organic Vegetables & Fruits',
-    certification: 'Organic Certified',
-    location: 'Algiers, Algeria',
-    crops: ['Tomatoes', 'Potatoes', 'Lettuce', 'Carrots', 'Apples']
+    farmName: 'Loading farm...',
+    farmType: 'Loading...',
+    established: '',
+    totalArea: '',
+    specialty: 'Loading...',
+    certification: 'Loading...',
+    location: 'Loading...',
+    crops: []
   },
   businessStats: {
-    totalSales: 45,
-    customerRating: 4.8,
-    responseRate: 95,
-    completedOrders: 127
+    totalSales: 0,
+    customerRating: 0,
+    responseRate: 0,
+    completedOrders: 0
   },
   verification: {
-    email: true,
-    phone: true,
-    identity: true,
+    email: false,
+    phone: false,
+    identity: false,
     farm: 'pending'
   },
-  documents: [
-    { name: 'Identity Card', status: 'verified', icon: '🆔' },
-    { name: 'Farm License', status: 'verified', icon: '📄' },
-    { name: 'Organic Certificate', status: 'verified', icon: '🌱' },
-    { name: 'Tax Registration', status: 'pending', icon: '💼' }
-  ],
+  documents: [],
   settings: {
     emailNotifications: true,
     smsNotifications: false,
@@ -53,47 +49,60 @@ const farmerProfileData = {
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState('personal');
-  const [user, setUser] = useState(farmerProfileData);
+  const [user, setUser] = useState(defaultFarmerProfile);
   const [isEditing, setIsEditing] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [loadingProfile, setLoadingProfile] = useState(true);
+  const [profileError, setProfileError] = useState('');
   const navigate = useNavigate();
 
-  const handleInputChange = (section, field, value) => {
-    setProfileData(prev => ({
-      ...prev,
-      [section]: {
-        ...prev[section],
-        [field]: value
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const res = await farmerAPI.getProfile();
+
+        // Split fullname into first and last name
+        const nameParts = res.data.producer.fullname.split(' ');
+        const firstName = nameParts[0] || '';
+        const lastName = nameParts.slice(1).join(' ') || '';
+
+        setUser(prev => ({
+          ...prev,
+          personalInfo: {
+            ...prev.personalInfo,
+            firstName,
+            lastName,
+            email: res.data.producer.email ?? prev.personalInfo.email,
+            phone: res.data.producer.phone_number ?? prev.personalInfo.phone,
+            address: `${res.data.producer.location || 'Unknown location'}, Algeria`,
+            joinDate: res.data.producer.joined_at ? new Date(res.data.producer.joined_at).toLocaleDateString() : '',
+          },
+          farmInfo: {
+            ...prev.farmInfo,
+            farmName: `${res.data.producer.fullname}'s Farm`,
+            farmType: res.data.producer.domain || 'General Farming',
+            location: res.data.producer.location || 'Unknown location',
+            crops: res.data.producer.domain ? [res.data.producer.domain] : ['Various crops']
+          },
+          verification: {
+            ...prev.verification,
+            email: res.data.producer.verified_status === 'verified',
+            phone: res.data.producer.verified_status === 'verified',
+          }
+        }));
+      } catch (error) {
+        console.error('Failed to fetch profile:', error);
+        setProfileError(error.response?.data?.error || 'Unable to load profile details.');
+      } finally {
+        setLoadingProfile(false);
       }
-    }));
-  };
+    };
 
-  const handleSettingToggle = (setting) => {
-    setProfileData(prev => ({
-      ...prev,
-      settings: {
-        ...prev.settings,
-        [setting]: !prev.settings[setting]
-      }
-    }));
-  };
+    fetchProfile();
+  }, []);
 
-  const handleSaveProfile = async () => {
-    setIsLoading(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    console.log('Profile saved:', profileData);
-    setShowSuccess(true);
-    setIsEditing(false);
-    setIsLoading(false);
-    
-    setTimeout(() => {
-      setShowSuccess(false);
-    }, 3000);
-  };
-
-  const handleCancelEdit = () => {
-    setProfileData(farmerProfileData);
+  const handleSaveProfile = () => {
+    alert('Profile updated successfully!');
     setIsEditing(false);
   };
 
@@ -124,6 +133,12 @@ const Profile = () => {
               </div>
             </div>
           </div>
+
+          {profileError && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+              {profileError}
+            </div>
+          )}
 
           {/* Tabs */}
           <div className="bg-white rounded-2xl shadow-xl mb-8 overflow-hidden">
@@ -178,9 +193,10 @@ const Profile = () => {
                           value={user.personalInfo.firstName}
                           onChange={(e) => setUser({...user, personalInfo: {...user.personalInfo, firstName: e.target.value}})}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                          disabled={loadingProfile}
                         />
                       ) : (
-                        <p className="text-gray-900 py-2">{user.personalInfo.firstName}</p>
+                        <p className="text-gray-900 py-2">{loadingProfile ? 'Loading...' : user.personalInfo.firstName}</p>
                       )}
                     </div>
 
@@ -194,9 +210,10 @@ const Profile = () => {
                           value={user.personalInfo.lastName}
                           onChange={(e) => setUser({...user, personalInfo: {...user.personalInfo, lastName: e.target.value}})}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                          disabled={loadingProfile}
                         />
                       ) : (
-                        <p className="text-gray-900 py-2">{user.personalInfo.lastName}</p>
+                        <p className="text-gray-900 py-2">{loadingProfile ? 'Loading...' : user.personalInfo.lastName}</p>
                       )}
                     </div>
 
@@ -210,9 +227,10 @@ const Profile = () => {
                           value={user.personalInfo.email}
                           onChange={(e) => setUser({...user, personalInfo: {...user.personalInfo, email: e.target.value}})}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                          disabled={loadingProfile}
                         />
                       ) : (
-                        <p className="text-gray-900 py-2">{user.personalInfo.email}</p>
+                        <p className="text-gray-900 py-2">{loadingProfile ? 'Loading...' : user.personalInfo.email}</p>
                       )}
                     </div>
 
@@ -226,9 +244,10 @@ const Profile = () => {
                           value={user.personalInfo.phone}
                           onChange={(e) => setUser({...user, personalInfo: {...user.personalInfo, phone: e.target.value}})}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                          disabled={loadingProfile}
                         />
                       ) : (
-                        <p className="text-gray-900 py-2">{user.personalInfo.phone}</p>
+                        <p className="text-gray-900 py-2">{loadingProfile ? 'Loading...' : user.personalInfo.phone}</p>
                       )}
                     </div>
                   </div>
@@ -265,14 +284,14 @@ const Profile = () => {
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Farm Name
                       </label>
-                      <p className="text-gray-900 py-2">{user.farmInfo.farmName}</p>
+                      <p className="text-gray-900 py-2">{loadingProfile ? 'Loading...' : user.farmInfo.farmName}</p>
                     </div>
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Farm Type
                       </label>
-                      <p className="text-gray-900 py-2">{user.farmInfo.farmType}</p>
+                      <p className="text-gray-900 py-2">{loadingProfile ? 'Loading...' : user.farmInfo.farmType}</p>
                     </div>
 
                     <div>
@@ -286,7 +305,7 @@ const Profile = () => {
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Specialty
                       </label>
-                      <p className="text-gray-900 py-2">{user.farmInfo.specialty}</p>
+                      <p className="text-gray-900 py-2">{loadingProfile ? 'Loading...' : user.farmInfo.specialty}</p>
                     </div>
                   </div>
 
@@ -295,11 +314,15 @@ const Profile = () => {
                       Main Crops
                     </label>
                     <div className="flex flex-wrap gap-2">
-                      {user.farmInfo.crops.map((crop, index) => (
-                        <span key={index} className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-green-100 text-green-800 font-medium">
-                          {crop}
-                        </span>
-                      ))}
+                      {loadingProfile ? (
+                        <span className="text-gray-500">Loading crops...</span>
+                      ) : (
+                        user.farmInfo.crops.map((crop, index) => (
+                          <span key={index} className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-green-100 text-green-800 font-medium">
+                            {crop}
+                          </span>
+                        ))
+                      )}
                     </div>
                   </div>
                 </div>
