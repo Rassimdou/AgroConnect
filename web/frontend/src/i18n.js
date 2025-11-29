@@ -227,7 +227,48 @@ const resources = {
       "No products found": "No products found",
       "noProductsDescription": "We couldn't find any products matching your current filters. Try adjusting your search criteria or clearing some filters.",
       "Clear All Filters": "Clear All Filters",
-      "Browse All Products": "Browse All Products"
+      "Browse All Products": "Browse All Products",
+
+      // Admin Analytics
+      "Loading analytics...": "Loading analytics...",
+      "Analytics Dashboard": "Analytics Dashboard",
+      "Monitor your platform performance and insights": "Monitor your platform performance and insights",
+      "Today": "Today",
+      "Week": "Week",
+      "Month": "Month",
+      "Year": "Year",
+      "Total Users": "Total Users",
+      "Total Revenue": "Total Revenue",
+      "Active Orders": "Active Orders",
+      "Products Listed": "Products Listed",
+      "Sales Trend": "Sales Trend",
+      "User Distribution": "User Distribution",
+      "Product Categories": "Product Categories",
+      "Recent Activity": "Recent Activity",
+      "Mon": "Mon",
+      "Tue": "Tue",
+      "Wed": "Wed",
+      "Thu": "Thu",
+      "Fri": "Fri",
+      "Sat": "Sat",
+      "Sun": "Sun",
+      "Producers": "Producers",
+      "Buyers": "Buyers",
+      "Transporters": "Transporters",
+      "Dairy": "Dairy",
+      "Livestock": "Livestock",
+      "Sales (DZD)": "Sales (DZD)",
+      "Product Count": "Product Count",
+      "New producer registered": "New producer registered",
+      "Product listed": "Product listed",
+      "Order completed": "Order completed",
+      "New transporter registered": "New transporter registered",
+      "Payment received": "Payment received",
+      "5 min ago": "5 min ago",
+      "12 min ago": "12 min ago",
+      "23 min ago": "23 min ago",
+      "1 hour ago": "1 hour ago",
+      "2 hours ago": "2 hours ago"
     }
   },
   ar: {
@@ -452,7 +493,48 @@ const resources = {
       "No products found": "لم يتم العثور على منتجات",
       "noProductsDescription": "لم نتمكن من العثور على أي منتجات تطابق فلاترك الحالية. حاول تعديل معايير البحث أو مسح بعض الفلاتر.",
       "Clear All Filters": "مسح كل الفلاتر",
-      "Browse All Products": "تصفح كل المنتجات"
+      "Browse All Products": "تصفح كل المنتجات",
+
+      // Admin Analytics
+      "Loading analytics...": "جاري تحميل التحليلات...",
+      "Analytics Dashboard": "لوحة التحليلات",
+      "Monitor your platform performance and insights": "راقب أداء منصتك والرؤى",
+      "Today": "اليوم",
+      "Week": "أسبوع",
+      "Month": "شهر",
+      "Year": "سنة",
+      "Total Users": "إجمالي المستخدمين",
+      "Total Revenue": "إجمالي الإيرادات",
+      "Active Orders": "الطلبات النشطة",
+      "Products Listed": "المنتجات المدرجة",
+      "Sales Trend": "اتجاه المبيعات",
+      "User Distribution": "توزيع المستخدمين",
+      "Product Categories": "فئات المنتجات",
+      "Recent Activity": "النشاط الأخير",
+      "Mon": "الإثنين",
+      "Tue": "الثلاثاء",
+      "Wed": "الأربعاء",
+      "Thu": "الخميس",
+      "Fri": "الجمعة",
+      "Sat": "السبت",
+      "Sun": "الأحد",
+      "Producers": "المنتجون",
+      "Buyers": "المشترون",
+      "Transporters": "الناقلون",
+      "Dairy": "منتجات الألبان",
+      "Livestock": "الماشية",
+      "Sales (DZD)": "المبيعات (دج)",
+      "Product Count": "عدد المنتجات",
+      "New producer registered": "تسجيل منتج جديد",
+      "Product listed": "منتج مدرج",
+      "Order completed": "طلب مكتمل",
+      "New transporter registered": "تسجيل ناقل جديد",
+      "Payment received": "تم استلام الدفع",
+      "5 min ago": "منذ 5 دقائق",
+      "12 min ago": "منذ 12 دقيقة",
+      "23 min ago": "منذ 23 دقيقة",
+      "1 hour ago": "منذ ساعة واحدة",
+      "2 hours ago": "منذ ساعتين"
     }
   }
 };
@@ -461,7 +543,7 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: 'en', // language to use
+    lng: localStorage.getItem('i18nextLng') || 'en', // language to use
     interpolation: {
       escapeValue: false // react already does escaping
     }

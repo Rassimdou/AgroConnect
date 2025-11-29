@@ -18,6 +18,7 @@ import ProductDetail from './components/buyer/ProductDetail'
 import Cart from './components/buyer/Cart'
 import MyOrders from './components/buyer/MyOrders'
 import Profile from './components/buyer/Profile'
+import LanguageSelector from './components/LanguageSelector'
 import { ROUTES, USER_TYPE_ROUTES } from './routes'
 import FarmerSignin from './components/farmer/FarmerSignin'
 import FarmerSignup from './components/farmer/FarmerSignup'
@@ -33,99 +34,103 @@ import TransporterMyDeliveries from './components/transporter/MyDeliveries'
 import TransporterProfile from './components/transporter/Profile'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [isLanguageSet, setIsLanguageSet] = useState(!!localStorage.getItem('i18nextLng'));
 
   return (
     <Router>
-      <Routes>
-        {/* Landing Page */}
-        <Route path="/" element={
-          <>
-            <Header />
-            <Hero />
-            <Features />
-            <HowItWorks />
-            <Footer />
-          </>
-        } />
+      {!isLanguageSet ? (
+        <LanguageSelector onSelect={() => setIsLanguageSet(true)} />
+      ) : (
+        <Routes>
+          {/* Landing Page */}
+          <Route path="/" element={
+            <>
+              <Header />
+              <Hero />
+              <Features />
+              <HowItWorks />
+              <Footer />
+            </>
+          } />
 
-        {/* User Type Selection */}
-        <Route path="/user-selection" element={
-          <>
-            <Header />
-            <UserTypeSelection />
-            <Footer />
-          </>
-        } />
+          {/* User Type Selection */}
+          <Route path="/user-selection" element={
+            <>
+              <Header />
+              <UserTypeSelection />
+              <Footer />
+            </>
+          } />
 
-        {/* Authentication Routes */}
-        <Route path="/login" element={
-          <>
-            <Header />
-            <Login />
-            <Footer />
-          </>
-        } />
-        <Route path="/signup" element={
-          <>
-            <Header />
-            <Signup />
-            <Footer />
-          </>
-        } />
-        <Route path="/verify-otp" element={
-          <>
-            <Header />
-            <OTPVerification />
-            <Footer />
-          </>
-        } />
+          {/* Authentication Routes */}
+          <Route path="/login" element={
+            <>
+              <Header />
+              <Login />
+              <Footer />
+            </>
+          } />
+          <Route path="/signup" element={
+            <>
+              <Header />
+              <Signup />
+              <Footer />
+            </>
+          } />
+          <Route path="/verify-otp" element={
+            <>
+              <Header />
+              <OTPVerification />
+              <Footer />
+            </>
+          } />
 
-        {/* Buyer Routes */}
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/marketplace" element={<Marketplace />} />
-        <Route path="/product/:id" element={<ProductDetail />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/orders" element={<MyOrders />} />
-        <Route path="/profile" element={<Profile />} />
+          {/* Buyer Routes */}
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/marketplace" element={<Marketplace />} />
+          <Route path="/product/:id" element={<ProductDetail />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/orders" element={<MyOrders />} />
+          <Route path="/profile" element={<Profile />} />
 
-        {/* Farmer Routes */}
-        <Route path="/farmer-signin" element={
-          <>
-            <Header />
-            <FarmerSignin />
-            <Footer />
-          </>
-        } />
-        <Route path="/farmer-signup" element={
-          <>
-            <Header />
-            <FarmerSignup />
-            <Footer />
-          </>
-        } />
-        <Route path="/farmer-dashboard" element={<FarmerDashboard />} />
-        <Route path="/farmer-marketplace" element={<FarmerMarketplace />} />
-        <Route path="/farmer-add-product" element={<FarmerAddProduct />} />
-        <Route path="/farmer-my-products" element={<FarmerMyProducts />} />
-        <Route path="/farmer-orders" element={<FarmerOrders />} />
-        <Route path="/farmer-profile" element={<FarmerProfile />} />
+          {/* Farmer Routes */}
+          <Route path="/farmer-signin" element={
+            <>
+              <Header />
+              <FarmerSignin />
+              <Footer />
+            </>
+          } />
+          <Route path="/farmer-signup" element={
+            <>
+              <Header />
+              <FarmerSignup />
+              <Footer />
+            </>
+          } />
+          <Route path="/farmer-dashboard" element={<FarmerDashboard />} />
+          <Route path="/farmer-marketplace" element={<FarmerMarketplace />} />
+          <Route path="/farmer-add-product" element={<FarmerAddProduct />} />
+          <Route path="/farmer-my-products" element={<FarmerMyProducts />} />
+          <Route path="/farmer-orders" element={<FarmerOrders />} />
+          <Route path="/farmer-profile" element={<FarmerProfile />} />
 
-        {/* Transporter Routes */}
-        <Route path="/transporter-signup" element={
-          <>
-            <Header />
-            <TransporterSignup />
-            <Footer />
-          </>
-        } />
-        <Route path="/transporter-available-jobs" element={<TransporterAvailableJobs />} />
-        <Route path="/transporter-my-deliveries" element={<TransporterMyDeliveries />} />
-        <Route path="/transporter-profile" element={<TransporterProfile />} />
+          {/* Transporter Routes */}
+          <Route path="/transporter-signup" element={
+            <>
+              <Header />
+              <TransporterSignup />
+              <Footer />
+            </>
+          } />
+          <Route path="/transporter-available-jobs" element={<TransporterAvailableJobs />} />
+          <Route path="/transporter-my-deliveries" element={<TransporterMyDeliveries />} />
+          <Route path="/transporter-profile" element={<TransporterProfile />} />
 
-        {/* Redirect unknown routes to home */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+          {/* Redirect unknown routes to home */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      )}
     </Router>
   )
 }
