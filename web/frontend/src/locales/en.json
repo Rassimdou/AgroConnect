@@ -1,0 +1,498 @@
+{
+    "header": {
+        "dashboard": "Dashboard",
+        "marketplace": "Marketplace",
+        "cart": "Cart",
+        "orders": "Orders",
+        "profile": "Profile",
+        "myProducts": "My Products",
+        "availableJobs": "Available Jobs",
+        "myDeliveries": "My Deliveries",
+        "home": "Home",
+        "features": "Features",
+        "howItWorks": "How It Works",
+        "about": "About",
+        "contact": "Contact",
+        "signOut": "Sign Out"
+    },
+    "hero": {
+        "title": "AgroConnect",
+        "subtitle": "Digital Market connecting producers, buyers and transporters to streamline logistics, pricing and distribution in Algeria.",
+        "getStarted": "Get Started",
+        "learnMore": "Learn More"
+    },
+    "features": {
+        "title": "Why Choose",
+        "subtitle": "Our digital marketplace revolutionizes agricultural commerce in Algeria by connecting all stakeholders in one efficient platform.",
+        "connect": {
+            "title": "Connect All Parties",
+            "desc": "Seamlessly connect producers, buyers, and transporters in one digital marketplace across all 48 Algerian wilayas."
+        },
+        "pricing": {
+            "title": "Real-time Pricing",
+            "desc": "Access live market prices and trends to make informed decisions and optimize your agricultural business."
+        },
+        "logistics": {
+            "title": "Streamlined Logistics",
+            "desc": "Efficient transportation coordination with real-time tracking and optimized delivery routes across Algeria."
+        },
+        "payments": {
+            "title": "Secure Payments",
+            "desc": "Safe and secure payment processing with multiple options including mobile money and bank transfers."
+        },
+        "analytics": {
+            "title": "Market Analytics",
+            "desc": "Comprehensive data insights and analytics to help you understand market trends and make better business decisions."
+        },
+        "quality": {
+            "title": "Quality Assurance",
+            "desc": "Verified suppliers and quality control measures to ensure you get the best agricultural products and services."
+        },
+        "ctaTitle": "Ready to Transform Your Agricultural Business?",
+        "ctaDesc": "Join thousands of Algerian producers, buyers, and transporters already using AgroConnect DZ to streamline their operations.",
+        "joinNow": "Join Now - Free",
+        "learnMore": "Learn More"
+    },
+    "howItWorks": {
+        "title": "How",
+        "works": "Works",
+        "subtitle": "Simple, efficient, and secure process to connect agricultural stakeholders across Algeria in just 6 easy steps.",
+        "step1": {
+            "title": "Create Your Account",
+            "desc": "Sign up as a producer, buyer, or transporter. Complete your profile with necessary details and verification documents."
+        },
+        "step2": {
+            "title": "List or Browse Products",
+            "desc": "Producers can list their agricultural products with photos, prices, and quantities. Buyers can browse and compare offerings."
+        },
+        "step3": {
+            "title": "Connect & Negotiate",
+            "desc": "Use our chat system to communicate directly with other users, negotiate prices, and agree on terms."
+        },
+        "step4": {
+            "title": "Arrange Transportation",
+            "desc": "Connect with verified transporters in your area. Compare rates and schedules for efficient delivery."
+        },
+        "step5": {
+            "title": "Secure Payment",
+            "desc": "Complete transactions securely through our platform with multiple payment options including mobile money."
+        },
+        "step6": {
+            "title": "Track & Deliver",
+            "desc": "Monitor your shipments in real-time and receive delivery confirmations. Rate your experience for future improvements."
+        },
+        "ctaTitle": "Start Your Journey Today",
+        "ctaDesc": "Join the growing community of Algerian agricultural professionals using AgroConnect DZ to transform their business operations.",
+        "getStarted": "Get Started Now"
+    },
+    "footer": {
+        "stayConnected": "Stay Connected with AgroConnect",
+        "newsletterDesc": "Get the latest updates on agricultural technology, farming tips, and sustainable practices delivered to your inbox.",
+        "enterEmail": "Enter your email",
+        "subscribe": "Subscribe",
+        "digitalMarket": "Digital Market for Algeria",
+        "empowering": "Empowering farmers worldwide with cutting-edge technology for sustainable farming, precision agriculture, and increased productivity. Join the future of smart farming.",
+        "quickLinks": "Quick Links",
+        "products": "Products",
+        "services": "Services",
+        "aboutUs": "About Us",
+        "servicesTitle": "Services",
+        "cropMonitoring": "Crop Monitoring",
+        "precisionFarming": "Precision Farming",
+        "weatherAnalytics": "Weather Analytics",
+        "marketIntelligence": "Market Intelligence",
+        "consultation": "Consultation",
+        "contactUs": "Contact Us",
+        "rights": "© 2025 AgroConnect. All rights reserved. | Made with reqs team for sustainable agriculture."
+    },
+    "auth": {
+        "welcomeBack": "Welcome Back",
+        "signInTo": "Sign in to your {{type}} account",
+        "email": "Email Address",
+        "enterEmail": "Enter your email",
+        "password": "Password",
+        "enterPassword": "Enter your password",
+        "rememberMe": "Remember me",
+        "forgotPassword": "Forgot password?",
+        "signIn": "Sign In",
+        "signingIn": "Signing in...",
+        "noAccount": "Don't have an account?",
+        "signUpHere": "Sign up here",
+        "secureData": "Your data is secure and encrypted. We never share your information with third parties.",
+        "join": "Join AgroConnect",
+        "createAccount": "Create your {{type}} account",
+        "fullName": "Full Name",
+        "enterFullName": "Enter your full name",
+        "phone": "Phone Number",
+        "enterPhone": "+213 XX XXX XXXX",
+        "confirmPassword": "Confirm Password",
+        "enterConfirmPassword": "Confirm your password",
+        "createPassword": "Create a password",
+        "agreeTerms": "I agree to the",
+        "terms": "Terms of Service",
+        "and": "and",
+        "privacy": "Privacy Policy",
+        "createBtn": "Create Account",
+        "creating": "Creating Account...",
+        "hasAccount": "Already have an account?",
+        "signInHere": "Sign in here",
+        "joinThousands": "Join thousands of farmers and businesses already using AgroConnect to transform their agricultural operations."
+    },
+    "userType": {
+        "join": "Join",
+        "subtitle": "Choose your role in Algeria's digital agricultural marketplace and start transforming your business today.",
+        "select": "Select {{type}}",
+        "continue": "Continue as {{type}}",
+        "whyChoose": "Why Choose AgroConnect DZ?",
+        "verified": "Verified & Secure",
+        "verifiedDesc": "All users are verified with secure payment processing",
+        "fast": "Fast & Efficient",
+        "fastDesc": "Streamlined processes save time and reduce costs",
+        "nationwide": "Nationwide Coverage",
+        "nationwideDesc": "Connect across all 48 Algerian wilayas",
+        "producer": {
+            "title": "Producer",
+            "subtitle": "Agricultural Producer",
+            "desc": "List your products, manage inventory, and connect with buyers across Algeria.",
+            "f1": "List Products",
+            "f2": "Manage Inventory",
+            "f3": "Real-time Pricing",
+            "f4": "Direct Communication"
+        },
+        "buyer": {
+            "title": "Buyer",
+            "subtitle": "Agricultural Buyer",
+            "desc": "Find quality products, compare prices, and source from verified producers.",
+            "f1": "Browse Products",
+            "f2": "Compare Prices",
+            "f3": "Verified Suppliers",
+            "f4": "Bulk Ordering"
+        },
+        "transporter": {
+            "title": "Transporter",
+            "subtitle": "Logistics Provider",
+            "desc": "Offer transportation services and connect with shippers across all wilayas.",
+            "f1": "Route Optimization",
+            "f2": "Real-time Tracking",
+            "f3": "Capacity Management",
+            "f4": "Multi-wilaya Coverage"
+        },
+        "serviceProvider": {
+            "title": "Service Provider",
+            "subtitle": "Agricultural Services",
+            "desc": "Offer specialized services like equipment rental, consulting, and labor to farmers.",
+            "f1": "Equipment Rental",
+            "f2": "Consulting",
+            "f3": "Farm Labor",
+            "f4": "Veterinary Services"
+        }
+    },
+    "farmerDashboard": {
+        "welcome": "Welcome Back, Farmer!",
+        "subtitle": "Your farm management hub - Track, manage, and grow your business",
+        "weather": {
+            "title": "Farming Weather",
+            "humidity": "Humidity",
+            "wind": "Wind",
+            "rainfall": "Rainfall"
+        },
+        "stats": {
+            "revenue": "Monthly Revenue",
+            "revenueGrowth": "from last month",
+            "activeProducts": "Active Products",
+            "productsSold": "sold this month",
+            "rating": "Customer Rating",
+            "repeatCustomers": "repeat customers",
+            "farmLand": "Farm Land",
+            "activeCrops": "active crops"
+        },
+        "cropStatus": {
+            "title": "Crop Status & Health",
+            "subtitle": "Monitor your crop health and progress",
+            "manageAll": "Manage all",
+            "expectedYield": "Expected yield",
+            "healthy": "healthy"
+        },
+        "recentActivity": {
+            "title": "Recent Activity",
+            "subtitle": "Latest updates from your farm operations",
+            "viewAll": "View all"
+        },
+        "marketInsights": {
+            "title": "Market Insights",
+            "subtitle": "Current market trends and prices",
+            "demand": "demand"
+        },
+        "quickActions": {
+            "title": "Quick Actions",
+            "subtitle": "Common tasks and shortcuts",
+            "addProduct": "Add Product",
+            "myProducts": "My Products",
+            "viewOrders": "View Orders",
+            "messages": "Messages"
+        }
+    },
+    "buyerDashboard": {
+        "welcome": "Welcome back, {{name}}! 👋",
+        "subtitle": "Ready to discover fresh agricultural products?",
+        "browseProducts": "Browse Products",
+        "logout": "Logout",
+        "pending": "Pending",
+        "activeOrders": "Active Orders",
+        "trackPurchases": "Track your current purchases",
+        "viewDetails": "View Details →",
+        "trusted": "Trusted",
+        "favoriteSuppliers": "Favorite Suppliers",
+        "preferredPartners": "Your preferred farming partners",
+        "manageList": "Manage List →",
+        "marketTrends": "Market Trends",
+        "pricePerKg": "Potatoes price per kg",
+        "lastDays": "Last 5 days",
+        "recentlyViewed": "Recently Viewed",
+        "pickUp": "Pick up where you left off",
+        "viewAll": "View all",
+        "perKg": "per kg",
+        "recommended": "Recommended for You",
+        "personalized": "Personalized suggestions",
+        "browseMore": "Browse more",
+        "organic": "Organic"
+    },
+    "marketplace": {
+        "title": "Explore Market",
+        "titleHighlight": "Opportunities",
+        "subtitle": "Discover what other farmers are selling, track market prices, and understand demand trends to optimize your farming business.",
+        "loading": "Loading market data...",
+        "errorTitle": "Oops! Something went wrong",
+        "errorMsg": "Failed to load products. Please try again later.",
+        "tryAgain": "Try Again",
+        "filters": "Filters",
+        "clearAll": "Clear All",
+        "productType": "Product Type",
+        "allTypes": "All Types",
+        "region": "Region",
+        "allRegions": "All Regions",
+        "priceRange": "Price Range (DZD/kg)",
+        "allPrices": "All Prices",
+        "under200": "Under 200 DZD",
+        "over600": "Over 600 DZD",
+        "demandLevel": "Demand Level",
+        "allLevels": "All Levels",
+        "highDemand": "High Demand",
+        "mediumDemand": "Medium Demand",
+        "lowDemand": "Low Demand",
+        "activeFilters": "Active Filters:",
+        "type": "Type",
+        "price": "Price",
+        "demand": "Demand",
+        "productsFound": "Market Products Found",
+        "exploreTrends": "Explore pricing trends and market demand",
+        "sortBy": "Sort by:",
+        "sortOptions": {
+            "priceLowHigh": "Price: Low to High",
+            "priceHighLow": "Price: High to Low",
+            "demandHighLow": "Demand: High to Low",
+            "qualityScore": "Quality Score",
+            "newestFirst": "Newest First",
+            "regionAZ": "Region: A-Z"
+        },
+        "quality": "Quality",
+        "available": "Available",
+        "inquiries": "Inquiries",
+        "noProducts": "No products found",
+        "noProductsDesc": "We couldn't find any products matching your current filters. Try adjusting your search criteria or clearing some filters.",
+        "clearAllFilters": "Clear All Filters",
+        "browseAll": "Browse All Products",
+        "qualityLabels": {
+            "excellent": "Excellent",
+            "good": "Good",
+            "fair": "Fair"
+        },
+        "demandLabels": {
+            "high": "High",
+            "medium": "Medium",
+            "low": "Low"
+        }
+    },
+    "productDetail": {
+        "loading": "Loading product details...",
+        "errorTitle": "Oops! Something went wrong",
+        "tryAgain": "Try Again",
+        "notFoundTitle": "Product Not Found",
+        "notFoundDesc": "The product you're looking for doesn't exist or has been removed.",
+        "backToMarket": "Back to Marketplace",
+        "reviewProducer": "Review Producer",
+        "available": "Available",
+        "quantity": "Quantity:",
+        "total": "Total",
+        "orderNow": "Order Now - ",
+        "chat": "Chat",
+        "description": "Product Description",
+        "qualityAssurance": "Quality Assurance",
+        "qualityDesc": "Verified quality and complete traceability",
+        "aiScore": "AI Quality Score (Q-Score)",
+        "overallQuality": "Overall Quality",
+        "aiAnalysis": "Our AI analyzes multiple quality factors including appearance, freshness, size consistency, and absence of defects.",
+        "traceability": "Traceability Data (IoT)",
+        "harvestDate": "Harvest Date",
+        "timeSinceHarvest": "Time Since Harvest",
+        "temperature": "Temperature Range",
+        "storage": "Storage Conditions",
+        "transportation": "Transportation",
+        "originFarm": "Origin Farm",
+        "nutritional": "Nutritional Information",
+        "calories": "Calories",
+        "protein": "Protein",
+        "carbs": "Carbs",
+        "fiber": "Fiber",
+        "chatModal": {
+            "connecting": "Connecting...",
+            "online": "Online",
+            "offline": "Offline",
+            "confirmOrder": "Confirm Order",
+            "connectingChat": "Connecting to chat...",
+            "connectionFailed": "Connection Failed",
+            "noMessages": "No messages yet. Start the conversation!",
+            "typeMessage": "Type your message...",
+            "secureChat": "Chat with the producer directly. Your conversation is private and secure.",
+            "notConnected": "Not connected. Messages cannot be sent.",
+            "loginToChat": "Please login to chat with the producer",
+            "login": "Login"
+        },
+        "reviewModal": {
+            "title": "Review Producer",
+            "reviewing": "You are reviewing:",
+            "rating": "Rating",
+            "selectRating": "Select rating",
+            "star": "Star",
+            "stars": "Stars",
+            "yourReview": "Your Review (Optional)",
+            "placeholder": "Share your experience with this producer...",
+            "cancel": "Cancel",
+            "submit": "Submit Review"
+        }
+    },
+    "cart": {
+        "empty": "Your cart is empty",
+        "emptyDesc": "Discover fresh agricultural products and start building your order.",
+        "browseProducts": "Browse Products",
+        "viewDashboard": "View Dashboard",
+        "yourCart": "Your Cart ({{count}} items)",
+        "quality": "Quality: {{score}}%",
+        "remove": "Remove",
+        "shippingMethod": "Shipping Method",
+        "freePickup": "Free Pickup",
+        "free": "Free",
+        "freeDesc": "Pick up from supplier location • Ready in 24h",
+        "standard": "Standard Delivery",
+        "standardDesc": "Door-to-door delivery • 3-5 business days",
+        "express": "Express Delivery",
+        "expressDesc": "Priority delivery • 1-2 business days",
+        "orderSummary": "Order Summary",
+        "subtotal": "Subtotal ({{count}} items)",
+        "shipping": "Shipping",
+        "total": "Total",
+        "checkout": "Proceed to Checkout",
+        "securePayment": "Secure payment powered by AgroConnect",
+        "cartSummary": "Cart Summary",
+        "totalKg": "Total kg",
+        "products": "Products",
+        "suppliers": "Suppliers",
+        "avgQuality": "Avg Quality",
+        "checkoutAlert": "Proceeding to checkout with total: {{total}} DZD"
+    },
+    "orders": {
+        "title": "My Orders",
+        "subtitle": "Track your purchases and order history",
+        "newOrder": "New Order",
+        "orderId": "Order #{{id}}",
+        "items": "Order Items",
+        "trackShipment": "Track Shipment",
+        "trackOrder": "Track Order",
+        "leaveReview": "Leave Review",
+        "orderAgain": "Order Again",
+        "noOrders": "No orders yet",
+        "noOrdersDesc": "Start your agricultural journey by exploring our fresh products and placing your first order.",
+        "browseProducts": "Browse Products",
+        "viewDashboard": "View Dashboard",
+        "status": {
+            "delivered": "Delivered",
+            "inTransit": "In Transit",
+            "processing": "Processing"
+        },
+        "alerts": {
+            "tracking": "Tracking {{trackingNumber}}: Your order is {{status}}. Expected delivery: 2-3 business days.",
+            "noTracking": "Tracking information will be available once your order is processed.",
+            "review": "Leave a review for order {{id}}"
+        }
+    },
+    "profile": {
+        "title": "Profile",
+        "loading": "Loading...",
+        "tabs": {
+            "personal": "Personal Info",
+            "addresses": "Addresses",
+            "security": "Security"
+        },
+        "accountType": "{{role}} Account",
+        "verified": "Verified",
+        "pending": "Pending Verification",
+        "error": {
+            "fetch": "Unable to load profile details.",
+            "update": "Profile updated successfully!",
+            "notImplemented": "functionality would be implemented here"
+        },
+        "personal": {
+            "title": "Personal Information",
+            "subtitle": "Manage your account details and preferences",
+            "edit": "Edit Profile",
+            "cancel": "Cancel",
+            "fullName": "Full Name",
+            "email": "Email Address",
+            "phone": "Phone Number",
+            "type": "Account Type",
+            "save": "Save Changes"
+        },
+        "addresses": {
+            "title": "Delivery Addresses",
+            "subtitle": "Manage your shipping addresses",
+            "add": "Add Address",
+            "default": "Default",
+            "edit": "Edit",
+            "remove": "Remove"
+        },
+        "security": {
+            "title": "Account Security",
+            "subtitle": "Keep your account safe and secure",
+            "password": {
+                "title": "Password",
+                "lastChanged": "Last changed 3 months ago",
+                "change": "Change Password",
+                "current": "Current Password",
+                "new": "New Password",
+                "confirm": "Confirm New Password"
+            },
+            "2fa": {
+                "title": "Two-Factor Authentication",
+                "desc": "Add an extra layer of security",
+                "enable": "Enable"
+            },
+            "sessions": {
+                "title": "Login Sessions",
+                "desc": "Manage your active sessions",
+                "view": "View"
+            }
+        }
+    },
+    "chat": {
+        "title": "Messages",
+        "windowTitle": "Chat",
+        "noConversations": "No conversations yet.",
+        "noMessages": "No messages yet",
+        "failedLoad": "Failed to load conversations",
+        "connecting": "Connecting...",
+        "online": "Online",
+        "offline": "Offline",
+        "typeMessage": "Type your message...",
+        "send": "Send"
+    }
+}
