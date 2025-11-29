@@ -37,18 +37,12 @@ function getMimeType(filePath) {
     return mimeTypes[ext] || 'image/jpeg';
 }
 
-const aiImageProccessing = async (imagePath, exifMetadata = null, productDescription = null) => {
+const aiImageProccessing = async (imagePath, productDescription = null) => {
     const API_MODEL = 'gemini-2.5-flash';
     const MAX_RETRIES = 3;
 
     const promptPath = path.join(__dirname, "prompt.txt");
     let prompt = fs.readFileSync(promptPath, "utf-8");
-
-    // Replace placeholders in the prompt
-    prompt = prompt.replace(
-        '[Insert extracted EXIF metadata here, e.g., as a JSON object or string. If none is available, state "No EXIF metadata provided."]',
-        exifMetadata ? JSON.stringify(exifMetadata) : 'No EXIF metadata provided.'
-    );
 
     if (productDescription) {
         prompt = prompt.replace(
@@ -292,7 +286,7 @@ const check_anomaly = async (producer_id) => {
 
 export const validate_product = async (req, res) => {
     try {
-        const { product_id, image_path, exif_metadata } = req.body;
+        const { product_id, image_path } = req.body;
 
         if (!product_id) {
             return res.status(400).json({ error: "Product ID is required." });
@@ -324,7 +318,6 @@ export const validate_product = async (req, res) => {
         if (image_path) {
             const imageResult = await aiImageProccessing(
                 image_path,
-                exif_metadata || null,
                 product.description || null
             );
 
@@ -412,9 +405,9 @@ export const validate_product = async (req, res) => {
             },
             state: newState,
             action: action,
-            message: clampedScore > 9
+            message: clampedScore > 6
                 ? "Product deleted and producer flagged due to high fraud risk."
-                : clampedScore >= 4
+                : clampedScore >= 2
                     ? "Product approved with caution."
                     : "Product recommended."
         });

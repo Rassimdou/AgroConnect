@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Header from '../header';
 import Footer from '../footer';
 import farmImage from '../../assets/farm.jpg';
@@ -88,6 +89,7 @@ const dummyProducts = [
 ];
 
 const Marketplace = () => {
+  const { t } = useTranslation();
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -126,7 +128,7 @@ const Marketplace = () => {
         setFilteredProducts(normalized.length ? normalized : dummyProducts);
       } catch (err) {
         console.error('Error fetching products:', err);
-        setError('Failed to load products. Please try again later.');
+        setError(t('marketplace.errorMsg'));
         // Fallback to dummy data if API fails
         setProducts(dummyProducts);
         setFilteredProducts(dummyProducts);
@@ -136,7 +138,7 @@ const Marketplace = () => {
     };
 
     fetchProducts();
-  }, []);
+  }, [t]);
 
   // Filter products based on selected filters
   useEffect(() => {
@@ -175,9 +177,9 @@ const Marketplace = () => {
   };
 
   const getQualityScoreLabel = (score) => {
-    if (score >= 80) return 'Excellent';
-    if (score >= 50) return 'Good';
-    return 'Fair';
+    if (score >= 80) return t('marketplace.qualityLabels.excellent');
+    if (score >= 50) return t('marketplace.qualityLabels.good');
+    return t('marketplace.qualityLabels.fair');
   };
 
   const getDemandColor = (demand) => {
@@ -187,6 +189,10 @@ const Marketplace = () => {
       case 'Low': return 'bg-green-500';
       default: return 'bg-gray-500';
     }
+  };
+
+  const getDemandLabel = (demand) => {
+    return t(`marketplace.demandLabels.${demand.toLowerCase()}`, demand);
   };
 
   const handleFilterChange = (filterType, value) => {
@@ -205,11 +211,6 @@ const Marketplace = () => {
     });
   };
 
-  const handleContactSeller = (product) => {
-    // Navigate to contact page or open chat
-    alert(`Contacting seller for ${product.name}`);
-  };
-
   return (
     <>
       <Header isFarmerMode={true} />
@@ -225,11 +226,11 @@ const Marketplace = () => {
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="text-center max-w-4xl mx-auto">
               <h1 className="text-4xl md:text-6xl font-bold mb-6">
-                Explore Market
-                <span className="block text-green-400">Opportunities</span>
+                {t('marketplace.title')}
+                <span className="block text-green-400">{t('marketplace.titleHighlight')}</span>
               </h1>
               <p className="text-xl text-green-100 mb-8 max-w-2xl mx-auto">
-                Discover what other farmers are selling, track market prices, and understand demand trends to optimize your farming business.
+                {t('marketplace.subtitle')}
               </p>
             </div>
           </div>
@@ -241,7 +242,7 @@ const Marketplace = () => {
             <div className="flex items-center justify-center py-20">
               <div className="text-center">
                 <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-green-600 mx-auto mb-4"></div>
-                <p className="text-gray-600 text-lg">Loading market data...</p>
+                <p className="text-gray-600 text-lg">{t('marketplace.loading')}</p>
               </div>
             </div>
           )}
@@ -254,13 +255,13 @@ const Marketplace = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Oops! Something went wrong</h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">{t('marketplace.errorTitle')}</h3>
               <p className="text-gray-600 mb-8 max-w-md mx-auto">{error}</p>
               <button
                 onClick={() => window.location.reload()}
                 className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
               >
-                Try Again
+                {t('marketplace.tryAgain')}
               </button>
             </div>
           )}
@@ -271,7 +272,7 @@ const Marketplace = () => {
               <div className="lg:w-1/4">
                 <div className="bg-white rounded-2xl shadow-xl p-8 sticky top-24 border border-gray-100">
                   <div className="flex items-center justify-between mb-8">
-                    <h2 className="text-2xl font-bold text-gray-900">Filters</h2>
+                    <h2 className="text-2xl font-bold text-gray-900">{t('marketplace.filters')}</h2>
                     <button
                       onClick={clearFilters}
                       className="text-sm text-green-600 hover:text-green-700 font-semibold flex items-center hover:underline transition-all duration-300"
@@ -279,7 +280,7 @@ const Marketplace = () => {
                       <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
                       </svg>
-                      Clear All
+                      {t('marketplace.clearAll')}
                     </button>
                   </div>
 
@@ -289,11 +290,11 @@ const Marketplace = () => {
                       <svg className="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
                       </svg>
-                      Product Type
+                      {t('marketplace.productType')}
                     </label>
                     <div className="space-y-3">
                       {[
-                        { value: '', label: 'All Types', count: filteredProducts.length },
+                        { value: '', label: t('marketplace.allTypes'), count: filteredProducts.length },
                         { value: 'Fruits', label: 'Fruits', count: products.filter(p => p.type === 'Fruits').length },
                         { value: 'Vegetables', label: 'Vegetables', count: products.filter(p => p.type === 'Vegetables').length },
                         { value: 'Grains', label: 'Grains', count: products.filter(p => p.type === 'Grains').length }
@@ -323,11 +324,11 @@ const Marketplace = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                       </svg>
-                      Region
+                      {t('marketplace.region')}
                     </label>
                     <div className="space-y-3">
                       {[
-                        { value: '', label: 'All Regions', count: filteredProducts.length },
+                        { value: '', label: t('marketplace.allRegions'), count: filteredProducts.length },
                         { value: 'Algiers', label: 'Algiers', count: products.filter(p => p.region === 'Algiers').length },
                         { value: 'Oran', label: 'Oran', count: products.filter(p => p.region === 'Oran').length },
                         { value: 'Constantine', label: 'Constantine', count: products.filter(p => p.region === 'Constantine').length },
@@ -359,15 +360,15 @@ const Marketplace = () => {
                       <svg className="w-5 h-5 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
                       </svg>
-                      Price Range (DZD/kg)
+                      {t('marketplace.priceRange')}
                     </label>
                     <div className="space-y-3">
                       {[
-                        { value: '', label: 'All Prices', count: filteredProducts.length },
-                        { value: '0-200', label: 'Under 200 DZD', count: products.filter(p => p.price < 200).length },
+                        { value: '', label: t('marketplace.allPrices'), count: filteredProducts.length },
+                        { value: '0-200', label: t('marketplace.under200'), count: products.filter(p => p.price < 200).length },
                         { value: '200-400', label: '200 - 400 DZD', count: products.filter(p => p.price >= 200 && p.price <= 400).length },
                         { value: '400-600', label: '400 - 600 DZD', count: products.filter(p => p.price >= 400 && p.price <= 600).length },
-                        { value: '600', label: 'Over 600 DZD', count: products.filter(p => p.price > 600).length }
+                        { value: '600', label: t('marketplace.over600'), count: products.filter(p => p.price > 600).length }
                       ].map((option) => (
                         <label key={option.value} className="flex items-center justify-between p-3 rounded-xl hover:bg-purple-50 cursor-pointer transition-all duration-300 group">
                           <div className="flex items-center">
@@ -393,14 +394,14 @@ const Marketplace = () => {
                       <svg className="w-5 h-5 mr-2 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
                       </svg>
-                      Demand Level
+                      {t('marketplace.demandLevel')}
                     </label>
                     <div className="space-y-3">
                       {[
-                        { value: '', label: 'All Levels', count: filteredProducts.length },
-                        { value: 'High', label: 'High Demand', count: products.filter(p => p.demand === 'High').length },
-                        { value: 'Medium', label: 'Medium Demand', count: products.filter(p => p.demand === 'Medium').length },
-                        { value: 'Low', label: 'Low Demand', count: products.filter(p => p.demand === 'Low').length }
+                        { value: '', label: t('marketplace.allLevels'), count: filteredProducts.length },
+                        { value: 'High', label: t('marketplace.highDemand'), count: products.filter(p => p.demand === 'High').length },
+                        { value: 'Medium', label: t('marketplace.mediumDemand'), count: products.filter(p => p.demand === 'Medium').length },
+                        { value: 'Low', label: t('marketplace.lowDemand'), count: products.filter(p => p.demand === 'Low').length }
                       ].map((option) => (
                         <label key={option.value} className="flex items-center justify-between p-3 rounded-xl hover:bg-orange-50 cursor-pointer transition-all duration-300 group">
                           <div className="flex items-center">
@@ -422,26 +423,26 @@ const Marketplace = () => {
 
                   {/* Active Filters Summary */}
                   <div className="pt-4 border-t border-gray-200">
-                    <p className="text-sm text-gray-600 mb-2">Active Filters:</p>
+                    <p className="text-sm text-gray-600 mb-2">{t('marketplace.activeFilters')}</p>
                     <div className="flex flex-wrap gap-2">
                       {filters.type && (
                         <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">
-                          Type: {filters.type}
+                          {t('marketplace.type')}: {filters.type}
                         </span>
                       )}
                       {filters.region && (
                         <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800">
-                          Region: {filters.region}
+                          {t('marketplace.region')}: {filters.region}
                         </span>
                       )}
                       {filters.priceRange && (
                         <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-purple-100 text-purple-800">
-                          Price: {filters.priceRange} DZD
+                          {t('marketplace.price')}: {filters.priceRange} DZD
                         </span>
                       )}
                       {filters.demand && (
                         <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-orange-100 text-orange-800">
-                          Demand: {filters.demand}
+                          {t('marketplace.demand')}: {getDemandLabel(filters.demand)}
                         </span>
                       )}
                     </div>
@@ -456,19 +457,19 @@ const Marketplace = () => {
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
                       <h2 className="text-2xl font-bold text-gray-900 mb-1">
-                        {filteredProducts.length} Market Products Found
+                        {filteredProducts.length} {t('marketplace.productsFound')}
                       </h2>
-                      <p className="text-gray-600">Explore pricing trends and market demand</p>
+                      <p className="text-gray-600">{t('marketplace.exploreTrends')}</p>
                     </div>
                     <div className="flex items-center space-x-4">
-                      <span className="text-sm font-medium text-gray-700">Sort by:</span>
+                      <span className="text-sm font-medium text-gray-700">{t('marketplace.sortBy')}</span>
                       <select className="text-sm border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white shadow-sm">
-                        <option>Price: Low to High</option>
-                        <option>Price: High to Low</option>
-                        <option>Demand: High to Low</option>
-                        <option>Quality Score</option>
-                        <option>Newest First</option>
-                        <option>Region: A-Z</option>
+                        <option>{t('marketplace.sortOptions.priceLowHigh')}</option>
+                        <option>{t('marketplace.sortOptions.priceHighLow')}</option>
+                        <option>{t('marketplace.sortOptions.demandHighLow')}</option>
+                        <option>{t('marketplace.sortOptions.qualityScore')}</option>
+                        <option>{t('marketplace.sortOptions.newestFirst')}</option>
+                        <option>{t('marketplace.sortOptions.regionAZ')}</option>
                       </select>
                     </div>
                   </div>
@@ -477,7 +478,7 @@ const Marketplace = () => {
                   {(filters.type || filters.region || filters.priceRange || filters.demand) && (
                     <div className="mt-4 pt-4 border-t border-gray-200">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="text-sm font-medium text-gray-700">Active filters:</span>
+                        <span className="text-sm font-medium text-gray-700">{t('marketplace.activeFilters')}</span>
                         {filters.type && (
                           <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-green-100 text-green-800 font-medium">
                             <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -516,7 +517,7 @@ const Marketplace = () => {
                             <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
                             </svg>
-                            {filters.priceRange === '600' ? 'Over 600 DZD' : filters.priceRange.replace('-', ' - ') + ' DZD'}
+                            {filters.priceRange === '600' ? t('marketplace.over600') : filters.priceRange.replace('-', ' - ') + ' DZD'}
                             <button
                               onClick={() => handleFilterChange('priceRange', '')}
                               className="ml-2 hover:bg-purple-200 rounded-full p-0.5"
@@ -532,7 +533,7 @@ const Marketplace = () => {
                             <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
                             </svg>
-                            {filters.demand} Demand
+                            {getDemandLabel(filters.demand)}
                             <button
                               onClick={() => handleFilterChange('demand', '')}
                               className="ml-2 hover:bg-orange-200 rounded-full p-0.5"
@@ -569,7 +570,7 @@ const Marketplace = () => {
 
                         {/* Demand Badge */}
                         <div className={`absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-bold text-white shadow-lg ${getDemandColor(product.demand)}`}>
-                          {product.demand}
+                          {getDemandLabel(product.demand)}
                         </div>
                       </div>
 
@@ -593,20 +594,20 @@ const Marketplace = () => {
                               {product.price}
                               <span className="text-sm font-normal text-gray-500"> DZD</span>
                             </div>
-                            <div className="text-xs text-gray-500">per kg</div>
+                            <div className="text-xs text-gray-500">{t('marketplace.perKg')}</div>
                           </div>
                         </div>
 
                         {/* Details */}
                         <div className="space-y-3 mb-6">
                           <div className="flex items-center justify-between text-sm">
-                            <span className="text-gray-600">Quality:</span>
+                            <span className="text-gray-600">{t('marketplace.quality')}:</span>
                             <span className={`font-semibold ${product.qualityScore >= 80 ? 'text-green-600' : product.qualityScore >= 50 ? 'text-yellow-600' : 'text-red-600'}`}>
                               {getQualityScoreLabel(product.qualityScore)}
                             </span>
                           </div>
                           <div className="flex items-center justify-between text-sm">
-                            <span className="text-gray-600">Region:</span>
+                            <span className="text-gray-600">{t('marketplace.region')}:</span>
                             <span className="font-semibold text-gray-900 flex items-center">
                               <svg className="w-4 h-4 mr-1 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
@@ -616,17 +617,17 @@ const Marketplace = () => {
                             </span>
                           </div>
                           <div className="flex items-center justify-between text-sm">
-                            <span className="text-gray-600">Available:</span>
+                            <span className="text-gray-600">{t('marketplace.available')}:</span>
                             <span className="font-semibold text-gray-900">{product.quantity}kg</span>
                           </div>
                           <div className="flex items-center justify-between text-sm">
-                            <span className="text-gray-600">Demand:</span>
+                            <span className="text-gray-600">{t('marketplace.demand')}:</span>
                             <span className={`font-semibold ${product.demand === 'High' ? 'text-red-600' : product.demand === 'Medium' ? 'text-yellow-600' : 'text-green-600'}`}>
-                              {product.demand}
+                              {getDemandLabel(product.demand)}
                             </span>
                           </div>
                           <div className="flex items-center justify-between text-sm">
-                            <span className="text-gray-600">Inquiries:</span>
+                            <span className="text-gray-600">{t('marketplace.inquiries')}:</span>
                             <span className="font-semibold text-gray-900">{product.inquiries}</span>
                           </div>
                         </div>
@@ -655,22 +656,22 @@ const Marketplace = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                       </svg>
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-3">No products found</h3>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-3">{t('marketplace.noProducts')}</h3>
                     <p className="text-gray-600 mb-8 max-w-md mx-auto">
-                      We couldn't find any products matching your current filters. Try adjusting your search criteria or clearing some filters.
+                      {t('marketplace.noProductsDesc')}
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                       <button
                         onClick={clearFilters}
                         className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
                       >
-                        Clear All Filters
+                        {t('marketplace.clearAllFilters')}
                       </button>
                       <button
                         onClick={() => navigate('/farmer-marketplace')}
                         className="bg-white border-2 border-gray-300 hover:border-green-500 text-gray-700 hover:text-green-600 px-8 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
                       >
-                        Browse All Products
+                        {t('marketplace.browseAll')}
                       </button>
                     </div>
                   </div>

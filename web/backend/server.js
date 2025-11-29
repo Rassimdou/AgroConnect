@@ -6,13 +6,12 @@ import { Server } from "socket.io";
 import cookieParser from 'cookie-parser';
 import path from 'path';
 import { fileURLToPath } from 'url';
-
 import productRoutes from './market/product.routes.js';
 import { initialize as initializeChat } from './chat-system/chat.controller.js';
 import authRoutes from './controllers/auth/auth.js';
 import aiRoutes from './AI-verification/airoutes.js';
 import reviewRoutes from './review/reviewRoutes.js';
-
+import chatRoutes from './chat-system/chat.routes.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -46,7 +45,9 @@ initializeChat(io);
 
 app.use('/api/auth', authRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/ai', aiRoutes);
 app.use('/api/review', reviewRoutes);
+app.use('/api/chat', chatRoutes);
 
 const PORT = process.env.PORT || 3000;
 

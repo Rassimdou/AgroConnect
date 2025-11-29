@@ -15,8 +15,8 @@ const transporter = nodemailer.createTransport({
 const isProduction = process.env.NODE_ENV === 'production';
 const authCookieOptions = {
     httpOnly: true,
-    sameSite: "none",
-    secure: false,
+    sameSite: isProduction ? "none" : "lax",
+    secure: isProduction,
 };
 
 const clearCookieOptions = {
@@ -185,7 +185,8 @@ export const loginUsers = async (req, res) => {
         console.log(token);
         setAuthCookie(res, token);
         await connection.end();
-        return res.status(200).json({ message: "Login successful." });
+        const { password: _, ...userWithoutPassword } = user;
+        return res.status(200).json({ message: "Login successful.", user: userWithoutPassword });
     } catch (err) {
         console.error("Database error:", err);
         return res.status(500).json({ error: "Internal server error." });
@@ -217,8 +218,10 @@ export const loginproducers = async (req, res) => {
         console.log("Producer logged in successfully.");
         const token = jwt.sign({ id: producer.id, fullname: producer.fullname, role: "producer", verified: producer.verified_status }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
         setAuthCookie(res, token);
+        console.log(token);
         await connection.end();
-        return res.status(200).json({ message: "Login successful." });
+        const { password: _, ...producerWithoutPassword } = producer;
+        return res.status(200).json({ message: "Login successful.", producer: producerWithoutPassword });
     } catch (err) {
         console.error("Database error:", err);
         return res.status(500).json({ error: "Internal server error." });
@@ -250,7 +253,8 @@ export const logintransporters = async (req, res) => {
         const token = jwt.sign({ id: transporter.id, fullname: transporter.fullname, role: "transporter", verified: transporter.verified_status }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
         setAuthCookie(res, token);
         await connection.end();
-        return res.status(200).json({ message: "Login successful." });
+        const { password: _, ...transporterWithoutPassword } = transporter;
+        return res.status(200).json({ message: "Login successful.", transporter: transporterWithoutPassword });
     } catch (err) {
         console.error("Database error:", err);
         return res.status(500).json({ error: "Internal server error." });
@@ -379,6 +383,57 @@ const sendOTPverificationEmail = async ({ _id, email, user_type }) => {
     }
 };
 
+const registerNewService = async (req, res) => {
+    const { fullname, email, password, service_type, location } = req.body;
+    if (!fullname || !email || !password || !service_type || !location) {
+        return res.status(400).json({ error: "Fullname, email, and password are required." });
+    }
+    try {
+        const connection = await getConnection();
+        const [users] = await connection.promise().query("SELECT * FROM services WHERE email = ?", [email]);
+        if (users.length > 0) {
+            return res.status(409).json({ error: "Email already exists." });
+        }
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const [result] = await connection.promise().query(
+            "INSERT INTO services (fullname, email, password, service_type, location, verified_status) VALUES (?, ?, ?, ?, ?, ?)",
+            [fullname, email, hashedPassword, service_type, location, "unverified"]
+        );
+        await connection.end();
+
+        // Send OTP verification email
+        await sendOTPverificationEmail({ _id: result.insertId, user_type: "service", email: email });
+
+        return res.status(201).json({ userId: result.insertId, message: "User registered successfully." });
+    } catch (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({ error: "Internal server error." });
+    }
+};
+
+const loginService = async (req, res) => {
+    const { email, password } = req.body;
+    if (!email || !password) {
+        return res.status(400).json({ error: "Email and password are required." });
+    }
+    try {
+        const connection = await getConnection();
+        const [users] = await connection.promise().query("SELECT * FROM services WHERE email = ?", [email]);
+        if (users.length === 0) {
+            return res.status(401).json({ error: "Invalid email or password." });
+        }
+        const isPasswordValid = await bcrypt.compare(password, users[0].password);
+        if (!isPasswordValid) {
+            return res.status(401).json({ error: "Invalid email or password." });
+        }
+        const token = jwt.sign({ id: users[0].id, fullname: users[0].fullname, role: "service" }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
+        setAuthCookie(res, token);
+        return res.status(200).json({ message: "Login successful." });
+    } catch (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({ error: "Internal server error." });
+    }
+};
 
 const authController = {
     registernewUser,
@@ -391,7 +446,9 @@ const authController = {
     getproducerProfile,
     gettransporterProfile,
     logout,
-    verifyOTP
+    verifyOTP,
+    registerNewService,
+    loginService
 };
 
 export default authController;

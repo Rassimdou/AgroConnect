@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import api from '../services/api';
 
 const Signup = ({ userType = 'buyer' }) => {
@@ -16,6 +17,7 @@ const Signup = ({ userType = 'buyer' }) => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     setIsVisible(true);
@@ -123,10 +125,10 @@ const Signup = ({ userType = 'buyer' }) => {
             <span className="text-2xl">🌱</span>
           </div>
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
-            Join AgroConnect
+            {t('auth.join')}
           </h2>
           <p className="text-gray-600">
-            Create your {userType} account
+            {t('auth.createAccount', { type: userType })}
           </p>
         </div>
 
@@ -136,7 +138,7 @@ const Signup = ({ userType = 'buyer' }) => {
             {/* Full Name */}
             <div>
               <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
-                Full Name
+                {t('auth.fullName')}
               </label>
               <div className="relative">
                 <input
@@ -148,7 +150,7 @@ const Signup = ({ userType = 'buyer' }) => {
                   value={formData.fullName}
                   onChange={handleInputChange}
                   className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300 pr-10 ${errors.fullName ? 'border-red-300' : 'border-gray-300'}`}
-                  placeholder="Enter your full name"
+                  placeholder={t('auth.enterFullName')}
                 />
                 <svg className="absolute right-3 top-3.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
@@ -160,7 +162,7 @@ const Signup = ({ userType = 'buyer' }) => {
             {/* Email */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                Email Address
+                {t('auth.email')}
               </label>
               <div className="relative">
                 <input
@@ -172,7 +174,7 @@ const Signup = ({ userType = 'buyer' }) => {
                   value={formData.email}
                   onChange={handleInputChange}
                   className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300 pr-10 ${errors.email ? 'border-red-300' : 'border-gray-300'}`}
-                  placeholder="Enter your email"
+                  placeholder={t('auth.enterEmail')}
                 />
                 <svg className="absolute right-3 top-3.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
@@ -184,7 +186,7 @@ const Signup = ({ userType = 'buyer' }) => {
             {/* Phone */}
             <div>
               <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                Phone Number
+                {t('auth.phone')}
               </label>
               <div className="relative">
                 <input
@@ -196,7 +198,7 @@ const Signup = ({ userType = 'buyer' }) => {
                   value={formData.phone}
                   onChange={handleInputChange}
                   className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300 pr-10 ${errors.phone ? 'border-red-300' : 'border-gray-300'}`}
-                  placeholder="+213 XX XXX XXXX"
+                  placeholder={t('auth.enterPhone')}
                 />
                 <svg className="absolute right-3 top-3.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
@@ -208,7 +210,7 @@ const Signup = ({ userType = 'buyer' }) => {
             {/* Password */}
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                Password
+                {t('auth.password')}
               </label>
               <div className="relative">
                 <input
@@ -220,7 +222,7 @@ const Signup = ({ userType = 'buyer' }) => {
                   value={formData.password}
                   onChange={handleInputChange}
                   className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300 pr-10 ${errors.password ? 'border-red-300' : 'border-gray-300'}`}
-                  placeholder="Create a password"
+                  placeholder={t('auth.createPassword')}
                 />
                 <button
                   type="button"
@@ -245,7 +247,7 @@ const Signup = ({ userType = 'buyer' }) => {
             {/* Confirm Password */}
             <div>
               <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
-                Confirm Password
+                {t('auth.confirmPassword')}
               </label>
               <div className="relative">
                 <input
@@ -257,7 +259,7 @@ const Signup = ({ userType = 'buyer' }) => {
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
                   className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300 pr-10 ${errors.confirmPassword ? 'border-red-300' : 'border-gray-300'}`}
-                  placeholder="Confirm your password"
+                  placeholder={t('auth.enterConfirmPassword')}
                 />
                 <button
                   type="button"
@@ -290,13 +292,13 @@ const Signup = ({ userType = 'buyer' }) => {
               className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded mt-0.5"
             />
             <label htmlFor="terms" className="ml-2 block text-sm text-gray-700">
-              I agree to the{' '}
+              {t('auth.agreeTerms')}{' '}
               <a href="#" className="text-green-600 hover:text-green-700 font-medium">
-                Terms of Service
+                {t('auth.terms')}
               </a>{' '}
-              and{' '}
+              {t('auth.and')}{' '}
               <a href="#" className="text-green-600 hover:text-green-700 font-medium">
-                Privacy Policy
+                {t('auth.privacy')}
               </a>
             </label>
           </div>
@@ -313,23 +315,23 @@ const Signup = ({ userType = 'buyer' }) => {
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                Creating Account...
+                {t('auth.creating')}
               </div>
             ) : (
-              'Create Account'
+              t('auth.createBtn')
             )}
           </button>
 
           {/* Sign In Link */}
           <div className="text-center">
             <p className="text-gray-600">
-              Already have an account?{' '}
+              {t('auth.hasAccount')}{' '}
               <button
                 type="button"
                 onClick={handleLogin}
                 className="text-green-600 hover:text-green-700 font-semibold transition-colors duration-300"
               >
-                Sign in here
+                {t('auth.signInHere')}
               </button>
             </p>
           </div>
@@ -339,7 +341,7 @@ const Signup = ({ userType = 'buyer' }) => {
         <div className="mt-8 text-center">
           <div className="bg-blue-50 rounded-lg p-4">
             <p className="text-sm text-blue-800">
-              🚀 Join thousands of farmers and businesses already using AgroConnect to transform their agricultural operations.
+              🚀 {t('auth.joinThousands')}
             </p>
           </div>
         </div>

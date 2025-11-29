@@ -8,6 +8,7 @@ export const ROUTES = {
   BUYER_CART: 'buyer-cart',
   BUYER_ORDERS: 'buyer-orders',
   BUYER_PROFILE: 'buyer-profile',
+  INBOX: 'inbox',
   FARMER_SIGNIN: 'farmer-signin',
   FARMER_SIGNUP: 'farmer-signup',
   FARMER_DASHBOARD: 'farmer-dashboard',
@@ -32,6 +33,7 @@ export const ROUTE_COMPONENTS = {
   [ROUTES.BUYER_CART]: () => import('./components/buyer/Cart'),
   [ROUTES.BUYER_ORDERS]: () => import('./components/buyer/MyOrders'),
   [ROUTES.BUYER_PROFILE]: () => import('./components/buyer/Profile'),
+
   [ROUTES.FARMER_SIGNIN]: () => import('./components/farmer/FarmerSignin'),
   [ROUTES.FARMER_SIGNUP]: () => import('./components/farmer/FarmerSignup'),
   [ROUTES.FARMER_DASHBOARD]: () => import('./components/farmer/Dashboard'),

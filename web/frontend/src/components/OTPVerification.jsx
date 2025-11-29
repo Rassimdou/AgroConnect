@@ -95,7 +95,25 @@ const OTPVerification = () => {
         otp: otpString
       });
 
-      navigate('/dashboard');
+      // Redirect based on user role
+      const role = userRoleFromQuery || mergedUserData.role || 'user';
+      switch (role) {
+        case 'producer':
+          navigate('/farmer-dashboard');
+          break;
+        case 'user':
+          navigate('/dashboard');
+          break;
+        case 'transporter':
+          navigate('/transporter-available-jobs');
+          break;
+        case 'service':
+        case 'service_provider':
+          navigate('/service-provider-dashboard');
+          break;
+        default:
+          navigate('/dashboard');
+      }
     } catch (error) {
       setError(error.message || 'Invalid OTP. Please try again.');
     } finally {

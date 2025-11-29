@@ -93,3 +93,24 @@ export const getConversationHistory = async (conversationId) => {
         take: 50, // Limit history size
     });
 };
+
+/**
+ * Retrieves all conversations for a specific user.
+ */
+export const getUserConversations = async (userId, userType) => {
+    return prisma.chatConversation.findMany({
+        where: {
+            OR: [
+                { participant_1_id: userId, participant_1_type: userType },
+                { participant_2_id: userId, participant_2_type: userType }
+            ]
+        },
+        orderBy: { last_message_at: 'desc' },
+        include: {
+            messages: {
+                orderBy: { created_at: 'desc' },
+                take: 1
+            }
+        }
+    });
+};

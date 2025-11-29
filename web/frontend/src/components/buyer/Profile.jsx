@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Header from '../header';
 import Footer from '../footer';
 import api from '../../services/api';
@@ -35,6 +36,7 @@ const defaultUser = {
 };
 
 const Profile = () => {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('personal');
   const [user, setUser] = useState(defaultUser);
   const [isEditing, setIsEditing] = useState(false);
@@ -57,34 +59,34 @@ const Profile = () => {
         }));
       } catch (error) {
         console.error('Failed to fetch profile:', error);
-        setProfileError(error.response?.data?.error || 'Unable to load profile details.');
+        setProfileError(error.response?.data?.error || t('profile.error.fetch'));
       } finally {
         setLoadingProfile(false);
       }
     };
 
     fetchProfile();
-  }, []);
+  }, [t]);
 
   const handleSaveProfile = () => {
     // Here you would typically save to backend
-    alert('Profile updated successfully!');
+    alert(t('profile.error.update'));
     setIsEditing(false);
   };
 
   const handleAddAddress = () => {
-    alert('Add new address functionality would be implemented here');
+    alert(t('profile.addresses.add') + ' ' + t('profile.error.notImplemented'));
   };
 
   const handleChangePassword = () => {
-    alert('Password change functionality would be implemented here');
+    alert(t('profile.security.password.change') + ' ' + t('profile.error.notImplemented'));
     setShowPasswordModal(false);
   };
 
   const tabs = [
-    { id: 'personal', label: 'Personal Info', icon: '👤' },
-    { id: 'addresses', label: 'Addresses', icon: '📍' },
-    { id: 'security', label: 'Security', icon: '🔒' }
+    { id: 'personal', label: t('profile.tabs.personal'), icon: '👤' },
+    { id: 'addresses', label: t('profile.tabs.addresses'), icon: '📍' },
+    { id: 'security', label: t('profile.tabs.security'), icon: '🔒' }
   ];
 
   return (
@@ -98,14 +100,14 @@ const Profile = () => {
             <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
               <div className="flex items-center space-x-4">
                 <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center text-2xl text-gray-600 font-bold">
-                  {user.name.split(' ').map(n => n[0]).join('')}
+                  {user.name === "Loading..." ? t('profile.loading') : user.name.split(' ').map(n => n[0]).join('')}
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-gray-900">{user.name}</h2>
+                  <h2 className="text-xl font-bold text-gray-900">{user.name === "Loading..." ? t('profile.loading') : user.name}</h2>
                   <p className="text-gray-600">{user.email}</p>
-                  <p className="text-sm text-gray-500 capitalize">{user.role || 'Buyer'} Account</p>
+                  <p className="text-sm text-gray-500 capitalize">{t('profile.accountType', { role: user.role || 'Buyer' })}</p>
                   <p className={`text-xs font-semibold mt-1 ${user.verified ? 'text-green-600' : 'text-yellow-600'}`}>
-                    {user.verified ? 'Verified' : 'Pending Verification'}
+                    {user.verified ? t('profile.verified') : t('profile.pending')}
                   </p>
                 </div>
               </div>
@@ -143,8 +145,8 @@ const Profile = () => {
                   <div className="space-y-8">
                     <div className="flex items-center justify-between">
                       <div>
-                        <h3 className="text-2xl font-bold text-gray-900 mb-1">Personal Information</h3>
-                        <p className="text-gray-600">Manage your account details and preferences</p>
+                        <h3 className="text-2xl font-bold text-gray-900 mb-1">{t('profile.personal.title')}</h3>
+                        <p className="text-gray-600">{t('profile.personal.subtitle')}</p>
                       </div>
                       <button
                         onClick={() => setIsEditing(!isEditing)}
@@ -158,14 +160,14 @@ const Profile = () => {
                             <svg className="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
                             </svg>
-                            Cancel
+                            {t('profile.personal.cancel')}
                           </>
                         ) : (
                           <>
                             <svg className="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                             </svg>
-                            Edit Profile
+                            {t('profile.personal.edit')}
                           </>
                         )}
                       </button>
@@ -174,7 +176,7 @@ const Profile = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Full Name
+                          {t('profile.personal.fullName')}
                         </label>
                         {isEditing ? (
                           <input
@@ -190,7 +192,7 @@ const Profile = () => {
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Email Address
+                          {t('profile.personal.email')}
                         </label>
                         {isEditing ? (
                           <input
@@ -206,7 +208,7 @@ const Profile = () => {
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Phone Number
+                          {t('profile.personal.phone')}
                         </label>
                         {isEditing ? (
                           <input
@@ -222,7 +224,7 @@ const Profile = () => {
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Account Type
+                          {t('profile.personal.type')}
                         </label>
                         <p className="text-gray-900 py-2">Buyer</p>
                       </div>
@@ -234,7 +236,7 @@ const Profile = () => {
                           onClick={() => setIsEditing(false)}
                           className="px-8 py-3 border-2 border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-all duration-300 transform hover:scale-105 cursor-pointer"
                         >
-                          Cancel
+                          {t('profile.personal.cancel')}
                         </button>
                         <button
                           onClick={handleSaveProfile}
@@ -243,7 +245,7 @@ const Profile = () => {
                           <svg className="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                           </svg>
-                          Save Changes
+                          {t('profile.personal.save')}
                         </button>
                       </div>
                     )}
@@ -255,8 +257,8 @@ const Profile = () => {
                   <div className="space-y-8">
                     <div className="flex items-center justify-between">
                       <div>
-                        <h3 className="text-2xl font-bold text-gray-900 mb-1">Delivery Addresses</h3>
-                        <p className="text-gray-600">Manage your shipping addresses</p>
+                        <h3 className="text-2xl font-bold text-gray-900 mb-1">{t('profile.addresses.title')}</h3>
+                        <p className="text-gray-600">{t('profile.addresses.subtitle')}</p>
                       </div>
                       <button
                         onClick={handleAddAddress}
@@ -265,7 +267,7 @@ const Profile = () => {
                         <svg className="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                         </svg>
-                        Add Address
+                        {t('profile.addresses.add')}
                       </button>
                     </div>
 
@@ -278,7 +280,7 @@ const Profile = () => {
                                 <span className="font-medium text-gray-900">{address.type}</span>
                                 {address.isDefault && (
                                   <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">
-                                    Default
+                                    {t('profile.addresses.default')}
                                   </span>
                                 )}
                               </div>
@@ -287,11 +289,11 @@ const Profile = () => {
                             </div>
                             <div className="flex space-x-2">
                               <button className="text-sm text-blue-600 hover:text-blue-700 cursor-pointer">
-                                Edit
+                                {t('profile.addresses.edit')}
                               </button>
                               {!address.isDefault && (
                                 <button className="text-sm text-red-600 hover:text-red-700 cursor-pointer">
-                                  Remove
+                                  {t('profile.addresses.remove')}
                                 </button>
                               )}
                             </div>
@@ -306,41 +308,41 @@ const Profile = () => {
                 {activeTab === 'security' && (
                   <div className="space-y-8">
                     <div>
-                      <h3 className="text-2xl font-bold text-gray-900 mb-1">Account Security</h3>
-                      <p className="text-gray-600">Keep your account safe and secure</p>
+                      <h3 className="text-2xl font-bold text-gray-900 mb-1">{t('profile.security.title')}</h3>
+                      <p className="text-gray-600">{t('profile.security.subtitle')}</p>
                     </div>
 
                     <div className="space-y-4">
                       <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
                         <div>
-                          <h4 className="font-medium text-gray-900">Password</h4>
-                          <p className="text-sm text-gray-600">Last changed 3 months ago</p>
+                          <h4 className="font-medium text-gray-900">{t('profile.security.password.title')}</h4>
+                          <p className="text-sm text-gray-600">{t('profile.security.password.lastChanged')}</p>
                         </div>
                         <button
                           onClick={() => setShowPasswordModal(true)}
                           className="text-sm text-green-600 hover:text-green-700 font-medium cursor-pointer"
                         >
-                          Change Password
+                          {t('profile.security.password.change')}
                         </button>
                       </div>
 
                       <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
                         <div>
-                          <h4 className="font-medium text-gray-900">Two-Factor Authentication</h4>
-                          <p className="text-sm text-gray-600">Add an extra layer of security</p>
+                          <h4 className="font-medium text-gray-900">{t('profile.security.2fa.title')}</h4>
+                          <p className="text-sm text-gray-600">{t('profile.security.2fa.desc')}</p>
                         </div>
                         <button className="text-sm text-green-600 hover:text-green-700 font-medium cursor-pointer">
-                          Enable
+                          {t('profile.security.2fa.enable')}
                         </button>
                       </div>
 
                       <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
                         <div>
-                          <h4 className="font-medium text-gray-900">Login Sessions</h4>
-                          <p className="text-sm text-gray-600">Manage your active sessions</p>
+                          <h4 className="font-medium text-gray-900">{t('profile.security.sessions.title')}</h4>
+                          <p className="text-sm text-gray-600">{t('profile.security.sessions.desc')}</p>
                         </div>
                         <button className="text-sm text-green-600 hover:text-green-700 font-medium cursor-pointer">
-                          View
+                          {t('profile.security.sessions.view')}
                         </button>
                       </div>
                     </div>
@@ -355,11 +357,11 @@ const Profile = () => {
         {showPasswordModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Change Password</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('profile.security.password.change')}</h3>
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Current Password
+                    {t('profile.security.password.current')}
                   </label>
                   <input
                     type="password"
@@ -368,7 +370,7 @@ const Profile = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    New Password
+                    {t('profile.security.password.new')}
                   </label>
                   <input
                     type="password"
@@ -377,7 +379,7 @@ const Profile = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Confirm New Password
+                    {t('profile.security.password.confirm')}
                   </label>
                   <input
                     type="password"
@@ -390,13 +392,13 @@ const Profile = () => {
                   onClick={() => setShowPasswordModal(false)}
                   className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 cursor-pointer"
                 >
-                  Cancel
+                  {t('profile.personal.cancel')}
                 </button>
                 <button
                   onClick={handleChangePassword}
                   className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 cursor-pointer"
                 >
-                  Change Password
+                  {t('profile.security.password.change')}
                 </button>
               </div>
             </div>

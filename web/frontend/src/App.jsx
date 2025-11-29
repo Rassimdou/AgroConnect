@@ -1,16 +1,3 @@
-import { useState } from 'react'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import Header from './components/header'
-import Hero from './components/hero'
-import Features from './components/features'
-import HowItWorks from './components/how-it-works'
-import Footer from './components/footer'
-import UserTypeSelection from './components/UserTypeSelection'
-import Login from './components/Login'
-import Signup from './components/Signup'
 import OTPVerification from './components/OTPVerification'
 import Dashboard from './components/buyer/Dashboard'
 import Marketplace from './components/buyer/Marketplace'
@@ -31,6 +18,22 @@ import TransporterSignup from './components/transporter/TransporterSignup'
 import TransporterAvailableJobs from './components/transporter/AvailableJobs'
 import TransporterMyDeliveries from './components/transporter/MyDeliveries'
 import TransporterProfile from './components/transporter/Profile'
+import ServiceSignin from './components/service_provider/ServiceSignin'
+import ServiceSignup from './components/service_provider/ServiceSignup'
+import ServiceDashboard from './components/service_provider/ServiceDashboard'
+import { useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Header from './components/header'
+import Hero from './components/hero'
+import Features from './components/features'
+import HowItWorks from './components/how-it-works'
+import Footer from './components/footer'
+import Login from './components/Login'
+import Signup from './components/signup'
+import UserTypeSelection from './components/userTypeSelection'
+import { Navigate } from "react-router-dom";
+
+
 
 function App() {
   const [count, setCount] = useState(0)
@@ -122,6 +125,23 @@ function App() {
         <Route path="/transporter-available-jobs" element={<TransporterAvailableJobs />} />
         <Route path="/transporter-my-deliveries" element={<TransporterMyDeliveries />} />
         <Route path="/transporter-profile" element={<TransporterProfile />} />
+
+        {/* Service Provider Routes */}
+        <Route path="/service-provider-signin" element={
+          <>
+            <Header />
+            <ServiceSignin />
+            <Footer />
+          </>
+        } />
+        <Route path="/service-provider-signup" element={
+          <>
+            <Header />
+            <ServiceSignup />
+            <Footer />
+          </>
+        } />
+        <Route path="/service-provider-dashboard" element={<ServiceDashboard />} />
 
         {/* Redirect unknown routes to home */}
         <Route path="*" element={<Navigate to="/" replace />} />
