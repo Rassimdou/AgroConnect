@@ -79,7 +79,7 @@ const ChatWindow = ({ currentUser, targetId, targetType, onClose }) => {
                     )}
 
                     {chatMessages.map((msg, index) => {
-                        const isSentByMe = msg.sender_id === currentUser?.id && msg.sender_type === currentUser?.role;
+                        const isSentByMe = msg.sender_id == currentUser?.id && msg.sender_type === currentUser?.role;
                         return (
                             <div
                                 key={`${msg.id || 'temp'}-${index}`}

@@ -416,36 +416,6 @@ const FarmerDashboard = () => {
                 </div>
               </div>
 
-              {/* Weather Forecast */}
-              <div className={`bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 p-8 text-white transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`} style={{ transitionDelay: '800ms' }}>
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <h3 className="text-xl font-bold">🌤️ {t('farmerDashboard.weather.title')}</h3>
-                    <span className="text-2xl">⛅</span>
-                  </div>
-                </div>
-                <div className="text-center mb-4">
-                  <div className="text-4xl font-bold mb-2">{farmerDashboardData.weather.temperature}°C</div>
-                  <p className="text-blue-100">{farmerDashboardData.weather.condition}</p>
-                </div>
-                <div className="space-y-3 mb-6">
-                  <div className="flex justify-between items-center">
-                    <span className="text-blue-100">{t('farmerDashboard.weather.humidity')}</span>
-                    <span className="font-semibold">{farmerDashboardData.weather.humidity}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-blue-100">{t('farmerDashboard.weather.rainfall')}</span>
-                    <span className="font-semibold">{farmerDashboardData.weather.rainfall}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-blue-100">{t('farmerDashboard.weather.wind')}</span>
-                    <span className="font-semibold">{farmerDashboardData.weather.wind}</span>
-                  </div>
-                </div>
-                <div className="border-t border-blue-400 pt-4">
-                  <p className="text-blue-100">💡 {farmerDashboardData.weather.forecast}</p>
-                </div>
-              </div>
 
             </div>
           </div>

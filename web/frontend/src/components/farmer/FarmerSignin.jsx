@@ -64,6 +64,13 @@ const FarmerSignin = ({ onNavigate }) => {
       const res = await api.post('auth/login/producer', formData);
       console.log(res.data);
 
+      // Store user data in localStorage
+      const userData = res.data.producer;
+      if (userData) {
+        userData.role = 'producer';
+        localStorage.setItem('user', JSON.stringify(userData));
+      }
+
       if (onNavigate) {
         onNavigate('dashboard');
       } else {
@@ -77,7 +84,6 @@ const FarmerSignin = ({ onNavigate }) => {
   };
 
   const handleSignup = () => {
-
     navigate('/farmer-signup');
   };
 

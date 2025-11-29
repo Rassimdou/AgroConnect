@@ -12,6 +12,8 @@ import authRoutes from './controllers/auth/auth.js';
 import aiRoutes from './AI-verification/airoutes.js';
 import reviewRoutes from './review/reviewRoutes.js';
 import chatRoutes from './chat-system/chat.routes.js';
+import orderRoutes from './order/order.routes.js';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -45,9 +47,10 @@ initializeChat(io);
 
 app.use('/api/auth', authRoutes);
 app.use('/api/ai', aiRoutes);
-app.use('/api/ai', aiRoutes);
+// app.use('/api/ai', aiRoutes); // Duplicate removed
 app.use('/api/review', reviewRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/orders', orderRoutes);
 
 const PORT = process.env.PORT || 3000;
 

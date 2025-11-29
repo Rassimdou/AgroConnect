@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom'
 
 const HowItWorks = ({ onGetStarted }) => {
   const [isVisible, setIsVisible] = useState(false);
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const handleGetStarted = () => {
+    navigate('/user-selection');
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 300);
@@ -125,7 +131,7 @@ const HowItWorks = ({ onGetStarted }) => {
               {t('howItWorks.ctaDesc')}
             </p>
             <button
-              onClick={onGetStarted}
+              onClick={handleGetStarted}
               className="bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-10 rounded-full transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"
             >
               {t('howItWorks.getStarted')}
